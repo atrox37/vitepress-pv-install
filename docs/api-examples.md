@@ -2,63 +2,29 @@
 outline: deep
 ---
 
-# Runtime API Examples
+# 系统概览
 
-This page demonstrates usage of some of the runtime APIs provided by VitePress.
+EdgeEMS 是面向多站点、多设备的边缘能源管理系统。系统通过统一的设备接入、点位配置与告警策略，完成监控、控制与统计分析的闭环管理。
 
-![](https://voltagenc.sharepoint.com/sites/PV_Energy_Storage_VTG-Group/Shared%20Documents/General/%E6%B4%BB%E5%8A%A8%E7%85%A7%E7%89%87/11.29%20Q4%20team%20building/48762e01-8b36-4c69-8155-2d5ab8dc7af1.jpg)
+## 适用角色
 
-[48762e01-8b36-4c69-8155-2d5ab8dc7af1.jpg](https://voltagenc.sharepoint.com/:i:/s/PV_Energy_Storage_VTG-Group/IQAxl2UGeESxSqV6pyIL5egNAVE7kiUgPoYuz97C2vVVcjg?e=uTYwmD)
+- **Viewer**：只读查看数据、报表与告警。
+- **Operator**：可执行控制操作与日常维护。
+- **Admin**：配置设备、点位、用户权限与系统参数。
 
-<iframe
-  src="https://voltagenc.sharepoint.com/sites/PV_Energy_Storage_VTG-Group/_layouts/15/embed.aspx?UniqueId=06659731-4478-4ab1-a57a-a7220be5e80d"
-  width="640"
-  height="360"
-  frameborder="0"
-  scrolling="no"
-  allowfullscreen
-  title="48762e01-8b36-4c69-8155-2d5ab8dc7af1">
-</iframe>
+## 入口与导航
 
-<iframe src="https://voltagenc.sharepoint.com/sites/PV_Energy_Storage_VTG-Group/_layouts/15/embed.aspx?UniqueId=3f0ada5d-4bba-4110-b07f-2878d10bda06&embed=%7B%22ust%22%3Atrue%2C%22hv%22%3A%22CopyEmbedCode%22%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create" width="640" height="360" frameborder="0" scrolling="no" allowfullscreen title="sample_640x360.mp4"></iframe>
+- 左侧导航为主功能入口，按“监控 / 告警 / 控制 / 统计 / 系统管理”组织。
+- 顶部状态栏展示当前站点、实时告警数与账号信息。
+- 右上角支持快速切换站点或项目群。
 
-The main `useData()` API can be used to access site, theme, and page data for the current page. It works in both `.md` and `.vue` files:
+## 数据范围
 
-```md
-<script setup>
-import { useData } from 'vitepress'
+- 监控：实时功率、能量、设备状态与运行趋势。
+- 告警：阈值告警、通讯告警与设备异常。
+- 统计：日/月/年报表与异常对比分析。
 
-const { theme, page, frontmatter } = useData()
-</script>
+## 下一步
 
-## Results
-
-### Theme Data
-<pre>{{ theme }}</pre>
-
-### Page Data
-<pre>{{ page }}</pre>
-
-### Page Frontmatter
-<pre>{{ frontmatter }}</pre>
-```
-
-<script setup>
-import { useData } from 'vitepress'
-const { site, theme, page, frontmatter } = useData()
-</script>
-
-## Results
-
-### Theme Data
-<pre>{{ theme }}</pre>
-
-### Page Data
-<pre>{{ page }}</pre>
-
-### Page Frontmatter
-<pre>{{ frontmatter }}</pre>
-
-## More
-
-Check out the documentation for the [full list of runtime APIs](https://vitepress.dev/reference/runtime-api#usedata).
+- 阅读：`/guide/quick-start`
+- 进入：`/modules/overview`

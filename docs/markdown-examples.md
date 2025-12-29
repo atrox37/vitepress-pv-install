@@ -1,85 +1,27 @@
-# Markdown Extension Examples
+# 界面结构与术语
 
-This page demonstrates some of the built-in markdown extensions provided by VitePress.
+本页用于统一系统内常见术语与界面结构，方便跨团队协作时保持一致理解。
 
-## Syntax Highlighting
+## 常用术语
 
-VitePress provides Syntax Highlighting powered by [Shiki](https://github.com/shikijs/shiki), with additional features like line-highlighting:
+- **站点**：一个独立的物理场景，如一个园区或工厂。
+- **设备**：站点内的电池、PCS、光伏、柴油机等。
+- **点位**：设备上的采集或控制点。
+- **通道**：协议与链路配置集合。
+- **告警**：阈值触发、通信异常或设备状态异常。
 
-**Input**
+## 界面分区
 
-````md
-```js{4}
-export default {
-  data () {
-    return {
-      msg: 'Highlighted!'
-    }
-  }
-}
-```
-````
+- **左侧导航**：模块入口（监控、告警、控制、统计、系统管理）。
+- **顶部栏**：站点切换、告警汇总、个人中心。
+- **主工作区**：图表、列表与操作表单。
 
-**Output**
+## 操作约定
 
-```js{4}
-export default {
-  data () {
-    return {
-      msg: 'Highlighted!'
-    }
-  }
-}
-```
-
-## Custom Containers
-
-**Input**
-
-```md
-::: info
-This is an info box.
-:::
+1. 配置类操作默认需要管理员权限。
+2. 控制类操作需要二次确认。
+3. 关键变更会记录在操作日志中。
 
 ::: tip
-This is a tip.
+如有新的术语或操作流，请在更新手册时同步维护该页。
 :::
-
-::: warning
-This is a warning.
-:::
-
-::: danger
-This is a dangerous warning.
-:::
-
-::: details
-This is a details block.
-:::
-```
-
-**Output**
-
-::: info
-This is an info box.
-:::
-
-::: tip
-This is a tip.
-:::
-
-::: warning
-This is a warning.
-:::
-
-::: danger
-This is a dangerous warning.
-:::
-
-::: details
-This is a details block.
-:::
-
-## More
-
-Check out the documentation for the [full list of markdown extensions](https://vitepress.dev/guide/markdown).

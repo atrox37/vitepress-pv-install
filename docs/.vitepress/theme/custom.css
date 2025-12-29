@@ -1,0 +1,117 @@
+:root {
+  --vp-c-brand-1: #15335f;
+  --vp-c-brand-2: #1f427a;
+  --vp-c-brand-3: #0f2444;
+  --vp-c-brand-soft: rgba(21, 51, 95, 0.16);
+  --vp-c-accent-1: #ff6900;
+  --vp-c-accent-2: #ff8a33;
+  --vp-font-family-base: "Noto Sans SC", "PingFang SC", "Microsoft YaHei",
+    sans-serif;
+  --vp-font-family-heading: "Space Grotesk", "Noto Sans SC", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(
+    120deg,
+    #15335f 0%,
+    #15335f 45%,
+    #ff6900 100%
+  );
+  --vp-home-hero-image-background-image: radial-gradient(
+    60% 60% at 50% 40%,
+    rgba(255, 105, 0, 0.25) 0%,
+    rgba(21, 51, 95, 0.25) 45%,
+    rgba(21, 51, 95, 0) 80%
+  );
+  --vp-home-hero-image-filter: blur(0);
+}
+
+body {
+  background-image: radial-gradient(
+      1200px 500px at 10% 0%,
+      rgba(255, 105, 0, 0.08) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      1200px 500px at 90% 10%,
+      rgba(21, 51, 95, 0.12) 0%,
+      transparent 70%
+    );
+  background-attachment: fixed;
+}
+
+.VPNavBarTitle .title {
+  font-family: var(--vp-font-family-heading);
+  letter-spacing: 0.2px;
+}
+
+.VPHomeHero {
+  position: relative;
+  overflow: hidden;
+}
+
+.VPHomeHero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    120deg,
+    rgba(21, 51, 95, 0.15) 0%,
+    rgba(255, 105, 0, 0.08) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+.VPHome .image-bg {
+  opacity: 0.8;
+}
+
+.VPHome .text {
+  font-family: var(--vp-font-family-heading);
+  letter-spacing: 0.3px;
+}
+
+.VPHome .tagline {
+  max-width: 560px;
+  color: rgba(21, 51, 95, 0.78);
+}
+
+.VPButton.brand {
+  background: var(--vp-c-brand-1);
+  border-color: var(--vp-c-brand-1);
+}
+
+.VPButton.alt {
+  border-color: rgba(21, 51, 95, 0.3);
+  color: var(--vp-c-brand-1);
+}
+
+.VPHomeFeatures .VPHomeFeature {
+  border: 1px solid rgba(21, 51, 95, 0.12);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12px 30px rgba(15, 36, 68, 0.08);
+  backdrop-filter: blur(6px);
+}
+
+.VPHomeFeatures .VPHomeFeature .title {
+  font-family: var(--vp-font-family-heading);
+}
+
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3 {
+  font-family: var(--vp-font-family-heading);
+}
+
+.vp-doc a {
+  color: var(--vp-c-brand-1);
+}
+
+.vp-doc a:hover {
+  color: var(--vp-c-accent-1);
+}
+
+.vp-doc .custom-block.tip {
+  border-color: rgba(255, 105, 0, 0.4);
+  background: rgba(255, 105, 0, 0.08);
+}

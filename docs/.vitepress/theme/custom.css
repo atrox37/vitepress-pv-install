@@ -49,6 +49,15 @@ body {
   overflow: hidden;
 }
 
+/* Home Hero title: allow full width (keep gradient via --vp-home-hero-name-background) */
+.VPHomeHero .name {
+  max-width: 100% !important;
+}
+
+.VPHomeHero .name .clip {
+  white-space: normal;
+}
+
 .VPHomeHero::after {
   content: "";
   position: absolute;
@@ -97,6 +106,10 @@ body {
   font-family: var(--vp-font-family-heading);
 }
 
+.VPHome .VPHomeFeatures {
+  margin-top: 48px;
+}
+
 .vp-doc h1,
 .vp-doc h2,
 .vp-doc h3 {
@@ -114,4 +127,23 @@ body {
 .vp-doc .custom-block.tip {
   border-color: rgba(255, 105, 0, 0.4);
   background: rgba(255, 105, 0, 0.08);
+}
+
+::selection {
+  background: rgba(255, 105, 0, 0.25);
+  color: #ff6900;
+}
+
+/* Active nav emphasis */
+.VPNavBarMenuLink.active,
+.VPNavBarMenuLink.active .text {
+  color: var(--vp-c-brand-1);
+  font-weight: 600;
+}
+
+/* Active sidebar emphasis */
+.VPSidebarItem.is-active > .item > .text,
+.VPSidebarItem.is-active > .item > .text .title {
+  color: var(--vp-c-brand-1);
+  font-weight: 600;
 }

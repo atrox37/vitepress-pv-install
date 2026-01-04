@@ -3,22 +3,16 @@
 layout: home
 
 hero:
-  name: "EdgeEMS 用户手册"
-  text: "边缘能源管理系统"
-  tagline: 面向运维、运营与现场工程的统一操作指南，覆盖设备接入、监控告警、控制策略与统计分析。
-  actions:
-    - theme: brand
-      text: 快速开始
-      link: /guide/quick-start
-    - theme: alt
-      text: 功能总览
-      link: /modules/overview
+  name: "Monarch Cloud 用户手册"
+  text: ""
+  tagline: 覆盖普通用户与系统管理员的完整操作指南，聚焦监控、告警、控制与统计分析。
+  actions: []
 
 features:
-  - title: 统一入口与角色权限
-    details: 通过角色区分 Viewer/Operator/Admin，确保不同岗位只看到需要的功能与数据。
-  - title: 设备与点位全流程
-    details: 从设备接入、协议配置、点位映射到运行监控，一条链路贯穿。
+  - title: 站点总览与能量流向
+    details: 聚合站点健康度、能量分布与功率趋势，快速掌握运行状态。
+  - title: 设备类型化视图
+    details: 按 PV、储能、柴油机、电表等设备类型组织数据，快速定位关键指标。
   - title: 告警与控制闭环
     details: 实时告警联动控制策略，减少人工干预与误操作风险。
   - title: 统计与能效追踪

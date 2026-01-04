@@ -53,7 +53,7 @@ body {
 .VPNavBarTitle .title {
   font-family: var(--vp-font-family-heading);
   letter-spacing: 0.2px;
-  background-color: #ffffff;
+  /* background-color: #ffffff; */
 }
 
 .VPHomeHero {

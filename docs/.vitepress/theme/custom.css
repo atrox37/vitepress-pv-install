@@ -148,6 +148,19 @@ body {
   /* background-color: #ffffff; */
 }
 
+/* Visually "mask" the top part of the page scrollbar so it feels like it starts from the content area */
+.VPNav::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: var(--vp-nav-height);
+  width: 12px;
+  background: var(--vp-nav-bg-color);
+  z-index: 1000;
+  pointer-events: none;
+}
+
 .VPHomeHero {
   position: relative;
   overflow: hidden;
@@ -256,23 +269,11 @@ body {
   font-weight: 600;
 }
 
-/* Scroll in doc content instead of VPContent */
-html,
-body {
-  height: 100%;
-  overflow: hidden;
-}
-
-.VPContent {
-  height: 100vh;
-  overflow: hidden;
-}
-
-.VPDoc {
-  height: calc(100vh - var(--vp-nav-height));
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
+/* NOTE:
+ * Keep default VitePress scroll behavior so that:
+ * - Right-side outline ("On this page") anchor scrolling works
+ * - Hash navigation scrolls the correct container
+ */
 
 /* Global scrollbar styling */
 * {
@@ -329,9 +330,7 @@ body {
     display: none;
   }
 }
-.VPSidebar{
-
-}
+/* (intentionally left blank) */
 
 /* Stronger active state for top nav */
 .VPNavBarMenuLink.active,

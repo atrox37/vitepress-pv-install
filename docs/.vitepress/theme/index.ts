@@ -5,6 +5,17 @@ import { inBrowser, withBase } from "vitepress";
 
 const STORAGE_KEY = "mc_manual_locale";
 
+function normalizeHtmlTrailingSlash() {
+  if (!inBrowser) return;
+  const { pathname, search, hash } = window.location;
+  // S3 object endpoints do not resolve "directory indexes", and also treat
+  // keys with a trailing slash as different objects. Ensure ".html/" -> ".html".
+  if (pathname.endsWith(".html/")) {
+    const next = pathname.slice(0, -1) + search + hash;
+    window.history.replaceState(null, "", next);
+  }
+}
+
 function getLocaleFromPath(pathname: string) {
   // Use base-aware prefixes (works for dev + base deployments)
   if (pathname.startsWith(withBase("/en/"))) return "en";
@@ -43,6 +54,7 @@ function maybeRedirectByBrowserLocale() {
 
 function persistLocaleSelection() {
   if (!inBrowser) return;
+  normalizeHtmlTrailingSlash();
   const locale = getLocaleFromPath(window.location.pathname);
   window.localStorage.setItem(STORAGE_KEY, locale);
 }
@@ -55,10 +67,12 @@ export default {
     if (!inBrowser) return;
 
     maybeRedirectByBrowserLocale();
+    normalizeHtmlTrailingSlash();
     persistLocaleSelection();
 
     // When user switches language (route changes), remember the selection.
     ctx.router.onAfterRouteChanged = () => {
+      normalizeHtmlTrailingSlash();
       persistLocaleSelection();
     };
   },

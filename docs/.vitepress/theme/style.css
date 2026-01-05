@@ -1,18 +1,1 @@
 ﻿@import "./custom.css";
-
-/* Scroll within content to avoid full-page scrollbar on long docs */
-html,
-body {
-  height: 100%;
-  overflow: hidden;
-}
-
-.VPContent {
-  height: calc(100vh - var(--vp-nav-height));
-  overflow-y: auto;
-}
-
-.VPContent.is-home {
-  height: auto;
-  overflow: visible;
-}

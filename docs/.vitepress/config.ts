@@ -2,9 +2,9 @@ import { defineConfig } from "vitepress";
 
 export default defineConfig({
   // GitHub Pages repo base path
-  base: "/Internal-manual/",
+  base: "/",
   head: [
-    ['link', { rel: 'icon', href: './logo.png' }],
+    ["link", { rel: "icon", href: "/logo.png" }],
     [
       "link",
       {

@@ -326,3 +326,39 @@ docker-compose up -d
 ---
 
 **注意**: 本项目仍在积极开发中，API和功能可能会发生变化。请关注更新日志了解最新变化。
+
+## S3 + CloudFront cleanUrls
+
+If you host the built site on S3 and keep `cleanUrls` enabled (no `.html` in URLs),
+S3 cannot automatically map `/foo` to `/foo.html`. Fix this by adding a
+CloudFront Function that rewrites requests.
+
+1) Create a CloudFront Function and paste the code below
+2) Publish the function
+3) Associate it with the default cache behavior on the **Viewer Request** event
+4) Point CloudFront to your S3 origin (S3 website endpoint or S3 bucket with OAC)
+
+```js
+function handler(event) {
+  var request = event.request;
+  var uri = request.uri;
+
+  // Directory access: / -> /index.html, /docs/ -> /docs/index.html
+  if (uri.endsWith('/')) {
+    request.uri = uri + 'index.html';
+    return request;
+  }
+
+  // No extension: /foo -> /foo.html
+  if (!uri.includes('.')) {
+    request.uri = uri + '.html';
+  }
+
+  return request;
+}
+```
+
+Notes:
+- This only rewrites requests; no changes to build output are required.
+- If you also need SPA-style 404 fallbacks, add extra logic or use custom error
+  responses on CloudFront.

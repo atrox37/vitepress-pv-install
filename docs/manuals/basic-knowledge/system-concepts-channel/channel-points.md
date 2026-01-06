@@ -1,42 +1,42 @@
----
+﻿---
 outline: deep
 ---
 
-# 通道点位
+# Channel Points
 
-## 概念定义
+## Definition
 
-通道点位是指设备在指定协议下的实际数据点（真实寄存器地址或信号地址）。点位是数据采集及指令下发的最小操作单元。
-例如，在 Modbus 协议中：
+A channel point is a real data point of a device under a specific protocol (actual register address or signal address). A point is the smallest unit for data acquisition and command delivery.
+For example, in Modbus:
 
-- 电压可能位于地址 40001
-- 电流可能位于地址 40002
-- 设备启停可能位于 00001（开关量）
-  这些寄存器或标志位即为“通道点位”。
+- Voltage may be at address 40001
+- Current may be at address 40002
+- Device start/stop may be at 00001 (coil)
+  These registers or flags are channel points.
 
-## 点位分类
-平台将点位按照工业自动化领域的“四遥标准”进行分类：
+## Point Classification
+The platform classifies points according to the "four remote" standard in industrial automation:
 
-| 类型 | 名称       | 说明                                         |
-| ---- | ---------- | -------------------------------------------- |
-| 遥测 | Telemetry  | 连续量/模拟量（如温度、电压）                |
-| 遥信 | Signal     | 状态量/开关量（如开/关、报警）               |
-| 遥控 | Control    | 平台向设备下发的控制命令（如启停）           |
-| 遥调 | Adjustment | 平台下发的设备参数设定值（如频率、电压设定） |
+| Type | Name       | Description                                   |
+| ---- | ---------- | --------------------------------------------- |
+| Telemetry | Telemetry  | Continuous/analog values (e.g., temperature, voltage) |
+| Signal | Signal     | Discrete/switch values (e.g., on/off, alarm)  |
+| Control | Control    | Control commands issued by the platform (e.g., start/stop) |
+| Adjustment | Adjustment | Parameter setpoints issued by the platform (e.g., frequency or voltage setpoint) |
 
-点位类型决定了它属于读取类（遥测/遥信）还是写入类（遥控/遥调）。
+The point type determines whether it is read-only (Telemetry/Signal) or write-type (Control/Adjustment).
 
->注意：对于通道类型为di_do类型的通道，其通道点位类型只有遥信（Signal）和遥控（Control），因为其值只有0和1。
+>Note: For `di_do` channels, point types are only Signal and Control because the values are only 0 and 1.
 
-## 字段解释
+## Field Description
 
-每个通道点位通常包含以下信息：
+Each channel point typically includes:
 
-- `point_id`：点位唯一编号（正整数）。
-- `signal_name`：业务信号名称。
-- `value`：当前点位的数据。
-- `scale/offset`：数据缩放与偏移，用于将原始值转换为业务值。
-- `unit`：点位所对应的数据单位。
-- `reverse`：值是否要反转（常用于开关量）。
+- `point_id`: Unique point ID (positive integer).
+- `signal_name`: Business signal name.
+- `value`: Current value of the point.
+- `scale/offset`: Scaling and offset for converting raw values to business values.
+- `unit`: Unit of the point.
+- `reverse`: Whether the value should be inverted (commonly for switch points).
 
-> **注意：对于遥信（Signal）和遥控（Control）类型的点位，其点位信息无需`scale`、`offset`、`unit`字段。**
+> **Note: For Signal and Control points, the `scale`, `offset`, and `unit` fields are not required.**

@@ -1,42 +1,42 @@
----
+﻿---
 outline: deep
 ---
 
-# 通道点位映射
+# Channel Point Mapping
 
-## 概念定义
-由于不同设备厂商的寄存器地址、协议结构不尽相同，需要将“设备实际点位”映射到平台统一的数据模型。
- 通道映射用于实现：
+## Definition
+Because different device vendors use different register addresses and protocol structures, the platform maps "device actual points" to a unified data model.
+Channel mapping is used to:
 
-- 原始点位 → 统一格式
-- 协议地址 → 平台标准地址
-- 多寄存器合并、缩放、单位转换等处理
-平台通过映射规则，将设备底层寄存器数据转换为平台统一的数据结构，为历史数据、告警、公式计算提供标准输入。
+- Raw points → unified format
+- Protocol addresses → platform standard addresses
+- Multi-register merge, scaling, unit conversion, and more
+The platform converts device-level register data into a unified structure through mapping rules, providing standard input for historical data, alarms, and formula calculations.
 
-## 字段解释
-遵循不同协议的通道，其点位的映射不同：
+## Field Description
+Mappings differ by protocol:
 
-**modbus_rtu/modbus_tcp**：
+**modbus_rtu/modbus_tcp**:
 
-- `point_id`：点位唯一编号（正整数）
-- `slave_id`：Modbus 等协议中的从机号
-- `data_type`：数据类型，有int16、uint16、int32、uint32、float32、int64、uint64、float64、bool。
-- `byte_order`：字节序，如AB、BA、ABCD、CDAB等。
-- `function_code`：寄存器功能码，分别对应不同的功能寄存器
-  - `01`：读取线圈（Coils）状态，用于获取可读写的开关量输出（1bit）。
-  - `02`：读取离散输入（Discrete Inputs）状态，用于获取只读的开关量输入（1bit）。
-  - `03`：读取保持寄存器（Holding Registers），用于获取可读写的16位寄存器数据（如设定值/参数）。
-  - `04`：读取输入寄存器（Input Registers），用于获取只读的16位寄存器数据（如测量值/采集量）。
-  - `05`：写单个线圈（Single Coil），用于写入一个开关量输出（1bit）。
-  - `06`：写单个保持寄存器（Single Holding Register），用于写入一个16位寄存器值。
-  - `15`：写多个线圈（Multiple Coils），用于批量写入多个开关量输出（多个1bit）。
-  - `16`：写多个保持寄存器（Multiple Holding Registers），用于批量写入多个16位寄存器值。
-- `register_address`：寄存器地址，设备实际存放数据的位置，一般为1-65535。
-- `bit_position`：真实值所在的位置，适用于开关量，取值范围为1-15
+- `point_id`: Unique point ID (positive integer)
+- `slave_id`: Slave ID in Modbus and similar protocols
+- `data_type`: Data type: int16, uint16, int32, uint32, float32, int64, uint64, float64, bool.
+- `byte_order`: Byte order such as AB, BA, ABCD, CDAB, etc.
+- `function_code`: Register function code for different functions
+  - `01`: Read Coils, for read/write 1-bit outputs.
+  - `02`: Read Discrete Inputs, for read-only 1-bit inputs.
+  - `03`: Read Holding Registers, for read/write 16-bit register data (setpoints/parameters).
+  - `04`: Read Input Registers, for read-only 16-bit register data (measurements).
+  - `05`: Write Single Coil, for writing one 1-bit output.
+  - `06`: Write Single Holding Register, for writing one 16-bit register value.
+  - `15`: Write Multiple Coils, for writing multiple 1-bit outputs in batch.
+  - `16`: Write Multiple Holding Registers, for writing multiple 16-bit register values in batch.
+- `register_address`: Register address where data is stored, usually 1-65535.
+- `bit_position`: Bit position of the real value, used for switch points, range 1-15.
 
-**di_do**：
+**di_do**:
 
-* `point_id`：点位唯一编号（正整数）
-* `gpio_number`： Linux 给 GPIO line 的“全局编号“，使用户用一个数字就能指到某条 IO 线，不等同于物理针脚/芯片管脚。
+* `point_id`: Unique point ID (positive integer)
+* `gpio_number`: The global GPIO line number in Linux, allowing users to reference an IO line by a single number; not the same as the physical pin/chip pin.
 
-**这些内容决定平台如何将设备原始数据正确解析为可使用的业务数据。**
+**These items determine how the platform correctly parses raw device data into usable business data.**

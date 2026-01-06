@@ -1,12 +1,13 @@
----
+﻿---
 outline: deep
 ---
 
-# Devices 页面
+# Devices Page
 
-![1](../../../public/images/Devices/pv/1.png)
-**Devices** 包含多个设备类型，包括：**PV**、**Battery**、**Diesel Generator**、**Meter1**、**Meter2**。
-每个设备的页面中通常有：
+![1](/images/Devices/pv/1.png)
 
--  **Overview（概览）**：设备关键指标卡片/概览展示
-- **Value Monitoring（值监控）**：实时点位的表格展示，展示的是与真实设备绑定的通道中Telemetry、Signal的相关数据。
+**Devices** includes multiple device types, such as **PV**, **Battery**, **Diesel Generator**, **Meter1**, and **Meter2**.
+Each device page typically includes:
+
+- **Overview**: Card-based display of key device indicators.
+- **Value Monitoring**: Real-time point tables showing Telemetry and Signal data from channels bound to real devices.

@@ -1,8 +1,8 @@
----
+﻿---
 outline: deep
 ---
 
-# Alarm 页面
+# Alarm Page
 
-**Alarm**页面为告警记录页面，用户可以通过该模块对当前的告警信息以及历史告警信息进行查看。
+**Alarm** is the alarm record page. Users can view current and historical alarm information from this module.
 

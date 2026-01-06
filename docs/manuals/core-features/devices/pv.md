@@ -1,4 +1,4 @@
----
+﻿---
 outline: deep
 ---
 
@@ -6,23 +6,23 @@ outline: deep
 
 ### Overview
 
-![2](../../../public/images/Devices/pv/2.png)
+![2](/images/Devices/pv/2.png)
 
-- 顶部为PV的4个指标卡片：
-  - **PV Power**：光伏当前功率
-  - **PV Voltage**：光伏当前电压
-  - **PV Current**：光伏当前电流
-  - **Today’s Energy**：光伏今日发电量
-- 中间为 PV 背景示意区域，鼠标悬停在行区域会显示该串光伏板的数据：
-  - **P**：所选这串光伏板的功率
-  - **V**：所选这串光伏板的电压
-  - **I**：所选这串光伏板的电流
+- The top shows four PV indicator cards:
+  - **PV Power**: Current PV power
+  - **PV Voltage**: Current PV voltage
+  - **PV Current**: Current PV current
+  - **Today’s Energy**: PV energy generated today
+- The middle area shows a PV background diagram. Hovering over a string shows data for that PV string:
+  - **P**: Power of the selected PV string
+  - **V**: Voltage of the selected PV string
+  - **I**: Current of the selected PV string
 
 ### Value Monitoring
 
-![3](../../../public/images/Devices/pv/3.png)
+![3](/images/Devices/pv/3.png)
 
-- 顶部显示 **Update Time**，为最新获取到数据的时间。
-- 下方是两张表：
-  - 左面的表为通道的**Telemetry**表，包含`Name`、`Value`、`Unit`信息。
-  - 右面的表为通道的**Signal**表，包括`Name` 、`Status`信息。
+- The top shows **Update Time**, which is the latest data acquisition time.
+- Below are two tables:
+  - The left table is the channel **Telemetry** table, including `Name`, `Value`, and `Unit`.
+  - The right table is the channel **Signal** table, including `Name` and `Status`.

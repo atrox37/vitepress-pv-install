@@ -1,1000 +1,1021 @@
----
+﻿---
 outline: deep
 ---
 
-# 系统管理用户手册
+# System Administrator User Manual
 
-## 通道以及通道点位配置
+## Channel and Channel Point Configuration
 
-![1](../public/images/Setting/Configuration/channel/1.png)
-### 基础概念
-在物联网系统中，终端设备、采集网关以及云平台之间需要通过各种通信方式实现数据采集、遥控指令下发、设备状态监测等功能。为了实现标准化的设备接入及数据管理，平台基于工业物联网（IIoT）与电力自动化（SCADA）领域的成熟经验，引入了**通道（Channel）、通道点位（Channel Point）、通讯协议（Protocol）、四遥类型（遥测/遥信/遥控/遥调）及 通道映射（Mapping）**等概念。
-这些概念构成了系统实现设备与云端间通信的基础逻辑，是理解设备接入流程、点位配置、数据格式和网关行为的重要参考。
+![1](/images/Setting/Configuration/channel/1.png)
 
-#### 通道
-##### 概念定义
-通道是设备（或网关)与平台之间建立通信所使用的**逻辑链路**，包含了完成数据读写所需的一整套必要配置信息。
-简单来说，通道定义了：
+### Basic Concepts
+In an IoT system, terminal devices, acquisition gateways, and cloud platforms need to communicate through various methods for data collection, remote control, and device status monitoring. To standardize device onboarding and data management, the platform draws on proven experience in Industrial IoT (IIoT) and power automation (SCADA) and introduces concepts such as **Channel, Channel Point, Protocol, Four Remote types (Telemetry/Signal/Control/Adjustment), and Mapping**.
+These concepts form the core logic for communication between devices and the cloud, and are key to understanding device onboarding, point configuration, data formats, and gateway behavior.
 
-- 使用哪种协议与设备通信；
-- 如何连接设备；
-- 使用什么参数进行数据读写；
-- 如何保持通信和进行错误重试。
-通道是设备通信的基础，是所有点位读写操作的前提。
+#### Channel
+##### Definition
+A channel is the **logical link** used to establish communication between a device (or gateway) and the platform, and includes the complete configuration required for read/write operations.
+In simple terms, a channel defines:
 
-##### 通道包含的配置项
-**Basic Information：**
+- which protocol is used to communicate with the device;
+- how to connect to the device;
+- what parameters are used for read/write operations;
+- how to keep the connection alive and retry on errors.
+A channel is the foundation of device communication and a prerequisite for all point read/write operations.
 
-  - **id**：通道的唯一标识。
-  - **name**：通道的名称。
-  - **description**：对通道的描述。
-  - **protocol**：通道所遵循的协议，目前有`modbus_tcp`、`modbus_rtu`、`di_do` 协议。
-  - **enabled**：通道是否可用。
+##### Channel Configuration Items
+**Basic Information:**
 
-**Parameters**：
-根据 **protocol** 动态切换，常见参数说明：
+  - **id**: Unique identifier of the channel.
+  - **name**: Channel name.
+  - **description**: Channel description.
+  - **protocol**: Protocol used by the channel. Supported protocols include `modbus_tcp`, `modbus_rtu`, and `di_do`.
+  - **enabled**: Whether the channel is enabled.
+
+**Parameters**:
+Dynamically change based on **protocol**. Common parameters:
 
 - **modbus_tcp**
-    - **host**：主机地址（IP/域名）。示例：192.168.1.10、http://baidu.com。
-    - **port**：端口（默认 502）。范围：1-65535。
-    - **connect_timeout_ms**：连接超时（正整数，毫秒）。
-    - **read_timeout_ms**：读取超时（正整数，毫秒）。
+    - **host**: Host address (IP/domain). Examples: 192.168.1.10, http://baidu.com.
+    - **port**: Port (default 502). Range: 1-65535.
+    - **connect_timeout_ms**: Connection timeout (positive integer, milliseconds).
+    - **read_timeout_ms**: Read timeout (positive integer, milliseconds).
 - **modbus_rtu**
-    - **device**：串口设备路径（如 /dev/ttyS0、COM3）
-    - **baud_rate**：波特率（典型值：9600/19200/38400/115200）
-    - **data_bits**：数据位（常用 8）
-    - **stop_bits**：停止位（1 或 2）
-    - **parity**：校验位（N=无、E=偶校验、O=奇校验）
-    - **connect_timeout_ms**：连接超时（正整数，毫秒）
-    - **read_timeout_ms**：读取超时（正整数，毫秒）
-    - **retry_interval_ms**：读写失败后的重试间隔（正整数，毫秒）
+    - **device**: Serial device path (e.g., /dev/ttyS0, COM3)
+    - **baud_rate**: Baud rate (typical values: 9600/19200/38400/115200)
+    - **data_bits**: Data bits (commonly 8)
+    - **stop_bits**: Stop bits (1 or 2)
+    - **parity**: Parity (N=None, E=Even, O=Odd)
+    - **connect_timeout_ms**: Connection timeout (positive integer, milliseconds)
+    - **read_timeout_ms**: Read timeout (positive integer, milliseconds)
+    - **retry_interval_ms**: Retry interval after read/write failure (positive integer, milliseconds)
 
-**Running Status：**
+**Running Status:**
 
-- **connected**：通道是否连接（Connected/Disconnected）。
-- **running**：运行状态（Running/Stop）。
-- **last_update**：最后更新时间。
-- **error_count**：错误数量。
-- **last_error**：最后的错误信息。
+- **connected**: Whether the channel is connected (Connected/Disconnected).
+- **running**: Running status (Running/Stop).
+- **last_update**: Last update time.
+- **error_count**: Error count.
+- **last_error**: Last error message.
 
-**Point Counts：**
+**Point Counts:**
 
-- **telemetry**：遥测点位数量。
-- **signal**：遥信点位数量。
-- **control**：遥控点位数量。
-- **adjustment**：遥调点位数量。
+- **telemetry**: Telemetry point count.
+- **signal**: Signal point count.
+- **control**: Control point count.
+- **adjustment**: Adjustment point count.
 
-##### 通道的作用
-通道与设备通信的全过程都离不开通道的作用，包括：
+##### Role of Channels
+The entire communication process depends on channels, including:
 
-- 平台或网关如何建立连接（串口 / TCP / RTU / 以太网等）；
-- 如何从设备读取数据；
-- 如何向设备写入或下发指令；
-- 如何监控通信状态并进行异常处理。
-通俗理解为：
-通道 = 设备通信所需的“线路 + 协议 + 参数”。
+- how the platform or gateway establishes connections (serial / TCP / RTU / Ethernet);
+- how data is read from devices;
+- how data is written or commands are issued to devices;
+- how communication status is monitored and exceptions are handled.
+In plain terms:
+Channel = "link + protocol + parameters" required for device communication.
 
-#### 四遥
+#### Four Remote Types
 
-##### 概念定义
+##### Definition
 
-在工业自动化、电力系统以及物联网设备管理中，业务数据通常按“四遥”分类进行组织与管理。“四遥”是 SCADA（监控与数据采集系统）的经典数据模型，被广泛应用于 IIoT 平台、电力自动化、水务、暖通、能源管理系统等领域。
-四遥分类用于明确“点位的性质与用途”，帮助用户理解每一个点位表示什么、能做什么、如何被采集或下发。
-##### 遥测
- ###### 概念定义
+In industrial automation, power systems, and IoT device management, business data is typically organized and managed by the "four remote" categories. The four-remote model is a classic SCADA data model and is widely used in IIoT platforms, power automation, water, HVAC, energy management systems, and more.
+The classification clarifies the "nature and purpose of points," helping users understand what each point represents, what it can do, and how it is collected or issued.
+##### Telemetry
+ ###### Definition
 
-遥测指设备上传的连续量、模拟量、可度量的实时数值。
- 一般以数值类型呈现（整数或浮点数）。
-###### 常见示例
+Telemetry refers to continuous, analog, and measurable real-time values reported by devices.
+It is generally represented by numeric values (integer or float).
+###### Common Examples
 
-- 温度（℃）
-- 湿度（%RH）
-- 电压（V）、电流（A）
-- 功率（kW）、功率因数
-- 压力（kPa）、液位（%）
-- 流量、风速、转速
-- 能耗读数（电、气、水等）
+- Temperature (C)
+- Humidity (%RH)
+- Voltage (V), Current (A)
+- Power (kW), Power factor
+- Pressure (kPa), Level (%)
+- Flow, Wind speed, RPM
+- Energy readings (electricity, gas, water, etc.)
 
-###### 特点
+###### Characteristics
 
-- 多为读操作；
-- 数值会随设备运行实时变化；
-- 通常需要配置采集周期。
-   在平台中的使用
-   遥测点用于趋势分析、报表统计、能耗监测、运行优化等业务场景。
+- Mostly read operations;
+- Values change in real time with device operation;
+- Collection intervals typically need to be configured.
+   Usage in the platform
+   Telemetry points are used for trend analysis, reporting, energy monitoring, and operational optimization.
 
-##### 遥信
+##### Signal
 
-###### 概念定义
+###### Definition
 
-遥信指设备状态、开关量、枚举量等离散状态信息。
-一般仅有两种状态（0/1），也可能扩展为少量枚举值。
-###### 常见示例
+Signals are discrete status information such as device state, switch status, or enumeration values.
+Typically there are only two states (0/1), though some may extend to a small number of enumerations.
+###### Common Examples
 
-- 运行/停止
-- 合闸/分闸
-- 启动/未启动
-- 报警/正常
-- 故障/正常
-- 门开/关
-- 某继电器吸合/释放
+- Running/Stopped
+- Close/Open
+- Started/Not started
+- Alarm/Normal
+- Fault/Normal
+- Door Open/Closed
+- Relay Energized/Released
 
-###### 特点
+###### Characteristics
 
-- 多为读操作；
-- 适用于监控设备状态；
-- 变化事件可触发告警。
-  在平台中的使用
-  遥信点广泛用于报警管理、事件监测、状态记录等场景。
+- Mostly read operations;
+- Used for monitoring device status;
+- Change events can trigger alarms.
+  Usage in the platform
+  Signal points are widely used in alarm management, event monitoring, and status recording.
 
-##### 遥控
- ###### 概念定义
+##### Control
+ ###### Definition
 
-遥控指平台向设备下发的动作命令，用于改变设备的运行状态。
-属于“写操作”。
-###### 常见示例
+Control refers to action commands issued by the platform to change device operating status.
+This is a write operation.
+###### Common Examples
 
-- 启动/停止设备
-- 打开/关闭阀门
-- 合闸/分闸
-- 启动排风、排水、加热设备
-- 重启控制器
-- 切换模式
+- Start/stop equipment
+- Open/close valves
+- Close/open breakers
+- Start ventilation, drainage, heating equipment
+- Reboot controllers
+- Switch modes
 
-###### 特点
+###### Characteristics
 
-- 需要具备权限控制；
-- 常要求二次确认或安全校验；
-- 多为开关型命令（0/1）。
-  在平台中的使用
-  遥控适用于智能化操作、远程管理、自动化控制策略执行等场景。
+- Requires permission control;
+- Often requires secondary confirmation or safety checks;
+- Mostly switch-type commands (0/1).
+  Usage in the platform
+  Control is used for intelligent operations, remote management, and automated control strategy execution.
 
 ---
-##### 遥调
+##### Adjustment
 
-###### 概念定义
+###### Definition
 
-遥调是远程参数调整，用于对设备运行参数进行设定。
- 同样属于“写操作”，但与遥控不同，遥调作用于设备内部的“设定值”。
+Adjustment is remote parameter tuning used to set device operating parameters.
+It is also a write operation, but unlike Control, Adjustment acts on internal "setpoints".
 
-###### 常见示例
+###### Common Examples
 
-- 温度设定值
-- 压力上限/下限设定
-- 频率设定（Hz）
-- 电压、电流保护阈值
-- 费率参数（电表）
-- PID 控制参数（P/I/D）
+- Temperature setpoint
+- Pressure upper/lower limits
+- Frequency setpoint (Hz)
+- Voltage/current protection thresholds
+- Tariff parameters (meters)
+- PID control parameters (P/I/D)
 
-###### 特点
+###### Characteristics
 
-- 参数型写操作，而非开关动作；
-- 对设备运行性能影响较大；
-- 通常需要校验范围与类型。
-  在平台中的使用
-  遥调常与自动化控制策略结合，用于调节环境、优化能源效率等。
+- Parameter-type writes rather than switch actions;
+- Greater impact on device performance;
+- Typically requires range and type validation.
+  Usage in the platform
+  Adjustment is often combined with automation strategies to regulate environments and improve energy efficiency.
 
-#### 通道点位
+#### Channel Points
 
-##### 概念定义
+##### Definition
 
-通道点位是指设备在指定协议下的实际数据点（真实寄存器地址或信号地址）。点位是数据采集及指令下发的最小操作单元。
-例如，在 Modbus 协议中：
+A channel point is a real data point of a device under a specific protocol (actual register address or signal address). A point is the smallest unit for data acquisition and command delivery.
+For example, in Modbus:
 
-- 电压可能位于地址 40001
-- 电流可能位于地址 40002
-- 设备启停可能位于 00001（开关量）
-  这些寄存器或标志位即为“通道点位”。
+- Voltage may be at address 40001
+- Current may be at address 40002
+- Device start/stop may be at 00001 (coil)
+  These registers or flags are channel points.
 
-##### 点位分类
-平台将点位按照工业自动化领域的“四遥标准”进行分类：
+##### Point Classification
+The platform classifies points according to the "four remote" standard in industrial automation:
 
-| 类型 | 名称       | 说明                                         |
-| ---- | ---------- | -------------------------------------------- |
-| 遥测 | Telemetry  | 连续量/模拟量（如温度、电压）                |
-| 遥信 | Signal     | 状态量/开关量（如开/关、报警）               |
-| 遥控 | Control    | 平台向设备下发的控制命令（如启停）           |
-| 遥调 | Adjustment | 平台下发的设备参数设定值（如频率、电压设定） |
+| Type | Name       | Description                                   |
+| ---- | ---------- | --------------------------------------------- |
+| Telemetry | Telemetry  | Continuous/analog values (e.g., temperature, voltage) |
+| Signal | Signal     | Discrete/switch values (e.g., on/off, alarm)  |
+| Control | Control    | Control commands issued by the platform (e.g., start/stop) |
+| Adjustment | Adjustment | Parameter setpoints issued by the platform (e.g., frequency or voltage setpoint) |
 
-点位类型决定了它属于读取类（遥测/遥信）还是写入类（遥控/遥调）。
+The point type determines whether it is read-only (Telemetry/Signal) or write-type (Control/Adjustment).
 
->注意：对于通道类型为di_do类型的通道，其通道点位类型只有遥信（Signal）和遥控（Control），因为其值只有0和1。
+>Note: For `di_do` channels, point types are only Signal and Control because the values are only 0 and 1.
 
-##### 字段解释
+##### Field Description
 
-每个通道点位通常包含以下信息：
+Each channel point typically includes:
 
-- `point_id`：点位唯一编号（正整数）。
-- `signal_name`：业务信号名称。
-- `value`：当前点位的数据。
-- `scale/offset`：数据缩放与偏移，用于将原始值转换为业务值。
-- `unit`：点位所对应的数据单位。
-- `reverse`：值是否要反转（常用于开关量）。
+- `point_id`: Unique point ID (positive integer).
+- `signal_name`: Business signal name.
+- `value`: Current value of the point.
+- `scale/offset`: Scaling and offset for converting raw values to business values.
+- `unit`: Unit of the point.
+- `reverse`: Whether the value should be inverted (commonly for switch points).
 
-> **注意：对于遥信（Signal）和遥控（Control）类型的点位，其点位信息无需`scale`、`offset`、`unit`字段。**
+> **Note: For Signal and Control points, the `scale`, `offset`, and `unit` fields are not required.**
 
-#### 通道点位映射
-##### 概念定义
-由于不同设备厂商的寄存器地址、协议结构不尽相同，需要将“设备实际点位”映射到平台统一的数据模型。
- 通道映射用于实现：
+#### Channel Point Mapping
+##### Definition
+Because different device vendors use different register addresses and protocol structures, the platform maps "device actual points" to a unified data model.
+ Channel mapping is used to:
 
-- 原始点位 → 统一格式
-- 协议地址 → 平台标准地址
-- 多寄存器合并、缩放、单位转换等处理
-平台通过映射规则，将设备底层寄存器数据转换为平台统一的数据结构，为历史数据、告警、公式计算提供标准输入。
+- Raw points -> unified format
+- Protocol addresses -> platform standard addresses
+- Multi-register merge, scaling, unit conversion, and more
+The platform converts device-level register data into a unified structure through mapping rules, providing standard input for historical data, alarms, and formula calculations.
 
-##### 字段解释
-遵循不同协议的通道，其点位的映射不同：
+##### Field Description
+Mappings differ by protocol:
 
-**modbus_rtu/modbus_tcp**：
+**modbus_rtu/modbus_tcp**:
 
-- `point_id`：点位唯一编号（正整数）
-- `slave_id`：Modbus 等协议中的从机号
-- `data_type`：数据类型，有int16、uint16、int32、uint32、float32、int64、uint64、float64、bool。
-- `byte_order`：字节序，如AB、BA、ABCD、CDAB等。
-- `function_code`：寄存器功能码，分别对应不同的功能寄存器
-  - `01`：读取线圈（Coils）状态，用于获取可读写的开关量输出（1bit）。
-  - `02`：读取离散输入（Discrete Inputs）状态，用于获取只读的开关量输入（1bit）。
-  - `03`：读取保持寄存器（Holding Registers），用于获取可读写的16位寄存器数据（如设定值/参数）。
-  - `04`：读取输入寄存器（Input Registers），用于获取只读的16位寄存器数据（如测量值/采集量）。
-  - `05`：写单个线圈（Single Coil），用于写入一个开关量输出（1bit）。
-  - `06`：写单个保持寄存器（Single Holding Register），用于写入一个16位寄存器值。
-  - `15`：写多个线圈（Multiple Coils），用于批量写入多个开关量输出（多个1bit）。
-  - `16`：写多个保持寄存器（Multiple Holding Registers），用于批量写入多个16位寄存器值。
-- `register_address`：寄存器地址，设备实际存放数据的位置，一般为1-65535。
-- `bit_position`：真实值所在的位置，适用于开关量，取值范围为1-15
+- `point_id`: Unique point ID (positive integer)
+- `slave_id`: Slave ID in Modbus and similar protocols
+- `data_type`: Data type: int16, uint16, int32, uint32, float32, int64, uint64, float64, bool.
+- `byte_order`: Byte order such as AB, BA, ABCD, CDAB, etc.
+- `function_code`: Register function code for different functions
+  - `01`: Read Coils, for read/write 1-bit outputs.
+  - `02`: Read Discrete Inputs, for read-only 1-bit inputs.
+  - `03`: Read Holding Registers, for read/write 16-bit register data (setpoints/parameters).
+  - `04`: Read Input Registers, for read-only 16-bit register data (measurements).
+  - `05`: Write Single Coil, for writing one 1-bit output.
+  - `06`: Write Single Holding Register, for writing one 16-bit register value.
+  - `15`: Write Multiple Coils, for writing multiple 1-bit outputs in batch.
+  - `16`: Write Multiple Holding Registers, for writing multiple 16-bit register values in batch.
+- `register_address`: Register address where data is stored, usually 1-65535.
+- `bit_position`: Bit position of the real value, used for switch points, range 1-15
 
-**di_do**：
+**di_do**:
 
-* `point_id`：点位唯一编号（正整数）
-* `gpio_number`： Linux 给 GPIO line 的“全局编号“，使用户用一个数字就能指到某条 IO 线，不等同于物理针脚/芯片管脚。
+* `point_id`: Unique point ID (positive integer)
+* `gpio_number`: The global GPIO line number in Linux, allowing users to reference an IO line by a single number; not the same as the physical pin/chip pin.
 
-**这些内容决定平台如何将设备原始数据正确解析为可使用的业务数据。**
+**These items determine how the platform correctly parses raw device data into usable business data.**
 
-### 配置操作
-#### 查询通道
+### Configuration Operations
+#### Query Channels
 
-![2](../public/images/Setting/Configuration/channel/2.png)
+![2](/images/Setting/Configuration/channel/2.png)
 
-1. 支持针对通道进行筛选，筛选条件有：
-- **protocol**：通道协议类型（如 modbus_tcp、modbus_rtu、di_do）。
-- **enabled**：是否启用（Enabled、Disabled）。
-- **connected**：是否已连接（Connected、Disconnected）。
-2. 选择好筛选条件后，点击`Search`按钮，进行筛选搜索。
-3. 点击`Reload`按钮，重置筛选。
+1. You can filter channels by:
+- **protocol**: Channel protocol type (e.g., modbus_tcp, modbus_rtu, di_do).
+- **enabled**: Enabled status (Enabled, Disabled).
+- **connected**: Connection status (Connected, Disconnected).
+2. After selecting filters, click **Search** to apply.
+3. Click **Reload** to reset filters.
 
-#### 查看通道详情及编辑
+#### View Channel Details and Edit
 
-![3](../public/images/Setting/Configuration/channel/3.png)
+![3](/images/Setting/Configuration/channel/3.png)
 
-1. 点击所要查看的通道行的`Operation`列中的`Detail`按钮，打开通道详情弹窗。
+1. Click **Detail** in the **Operation** column of the target channel to open the details dialog.
 
-![4](../public/images/Setting/Configuration/channel/4.png)
+![4](/images/Setting/Configuration/channel/4.png)
 
-2. 点击`Edit`按钮进入通道信息的编辑模式。
+2. Click **Edit** to enter edit mode.
 
-![5](../public/images/Setting/Configuration/channel/5.png)
+![5](/images/Setting/Configuration/channel/5.png)
 
-3. 填入所要修改的数据值，字段规则参考基础概念中对通道字段的解释。
-4. 点击`Submit`按钮进行提交。
-5. 点击`Cancel Edit`按钮取消编辑。
+3. Enter the values to update. Refer to the field definitions in the basic concepts section.
+4. Click **Submit** to save.
+5. Click **Cancel Edit** to cancel.
 
-#### 新增通道
+#### Add a New Channel
 
-![6](../public/images/Setting/Configuration/channel/6.png)
+![6](/images/Setting/Configuration/channel/6.png)
 
-2. 点击`New Channel`按钮，打开添加弹出框。
+2. Click **New Channel** to open the add dialog.
 
-![7](../public/images/Setting/Configuration/channel/7.png)
+![7](/images/Setting/Configuration/channel/7.png)
 
-3. 通过`Protocol`选择框进行通道协议的切换。填入正确的参数信息，字段规则参考详情页字段介绍。
-4. 点击`Submit`按钮，提交新增的通道。
-5. 点击`Cancel Add`按钮，取消新增。
+3. Select the protocol via the **Protocol** dropdown and fill in the required parameters. Refer to the field descriptions in the details page.
+4. Click **Submit** to add the channel.
+5. Click **Cancel Add** to cancel.
 
-#### 对已有通道的enable状态进行调整
+#### Toggle Channel Enable Status
 
-![8](../public/images/Setting/Configuration/channel/8.png)
+![8](/images/Setting/Configuration/channel/8.png)
 
-1. 点击对应通道行的`Enable`列下面的滑块进行调整。向左设置为`Enabled`，向右设置为`Disabled`。
+1. Use the slider in the **Enable** column to toggle. Slide left to **Enabled**, right to **Disabled**.
 
-#### 删除已有的通道
-![9](../public/images/Setting/Configuration/channel/9.png)
+#### Delete an Existing Channel
+![9](/images/Setting/Configuration/channel/9.png)
 
-1. 点击想要删除的通道行`Operation`列的`Delete`按钮进行删除。
+1. Click **Delete** in the **Operation** column of the channel row.
 
-![10](../public/images/Setting/Configuration/channel/10.png)
+![10](/images/Setting/Configuration/channel/10.png)
 
-2. 点击`Confirm`按钮确认删除。
-3. 点击`Cancel`按钮取消删除。
+2. Click **Confirm** to delete.
+3. Click **Cancel** to cancel.
 
-#### 通道点位配置
+#### Channel Point Configuration
 
-![11](../public/images/Setting/Configuration/channel/11.png)
-![12](../public/images/Setting/Configuration/channel/12.png)
+![11](/images/Setting/Configuration/channel/11.png)
 
-1. 通过点击想要查看的通道行**Operation**列的**Points**按钮，打开点位弹框。
+![12](/images/Setting/Configuration/channel/12.png)
 
-2. 点位类型的切换标签按钮，分别有**telemetry**、**signal**、**control**、**adjustment**，对应通道点位的四遥分类。点击展示对应类型下的点位。
-3. 视图模式切换：视图分为**Points（点位）**和**Mappings（点位映射）**，点击对应的按钮进行视图切换。
-4. 点击**Batch Publish**按钮可进行批量数值下发操作。
-5. 点击**Operation**列的**Publish**按钮可进行单个点位的数值下发操作。
-6. 点击**Export**按钮把当前tab页下面的表格数据以**.csv**的格式进行导出。
-7. 点击**Edit**按钮进入对点位的编辑模式。
-8. 点击**Cancel**按钮关闭弹框。
-9. 点位筛选框，可以手动输入进行点位名称的模糊搜索或者通过下拉框对点位名称的选择进行精准搜索。
+1. Click **Points** in the **Operation** column of the desired channel row to open the points dialog.
 
-![13](../public/images/Setting/Configuration/channel/13.png)
-通过视图切换滑块到**mappings**后，页面解析如下：
+2. The point type tabs include **telemetry**, **signal**, **control**, and **adjustment**, corresponding to the four-remote point categories. Click a tab to view points of that type.
+3. View mode toggle: **Points** and **Mappings**. Click the corresponding button to switch views.
+4. Click **Batch Publish** to issue values in bulk.
+5. Click **Publish** in the **Operation** column to issue a value for a single point.
+6. Click **Export** to export the table data of the current tab to **.csv**.
+7. Click **Edit** to enter point edit mode.
+8. Click **Cancel** to close the dialog.
+9. The point filter box supports fuzzy search by name or precise search via dropdown selection.
 
-10. 点击tab切换点位的类型，对点位映射的查看。
-11. 点击**Export**按钮，以**.csv**的格式导出当前点位类型中的表格数据。
-12. 点击**Edit**按钮进入对点位映射的编辑模式。
-13. 点击**Cancel**按钮关闭弹框。
+![13](/images/Setting/Configuration/channel/13.png)
 
-##### 下发点位的值
+When switching the view toggle to **mappings**, the page is interpreted as follows:
 
-下发点位的值有两种方式：**批量下发**和**单点下发**。
+10. Click the tab to switch point type and view point mappings.
+11. Click **Export** to export the table data of the current point type to **.csv**.
+12. Click **Edit** to enter point mapping edit mode.
+13. Click **Cancel** to close the dialog.
 
-###### 单点下发
+##### Issue Point Values
 
+There are two ways to issue point values: **bulk publish** and **single publish**.
 
+###### Single Publish
 
-![14](../public/images/Setting/Configuration/channel/14.png)
 
-![15](../public/images/Setting/Configuration/channel/15.png)
 
-![16](../public/images/Setting/Configuration/channel/16.png)
+![14](/images/Setting/Configuration/channel/14.png)
 
-1. 点击所要下发值的点位行的**Publish**按钮，打开单点下发值弹框。
+![15](/images/Setting/Configuration/channel/15.png)
 
-2. 在Value的输入框中进行下发值的输入（对于**telemetry**、**adjustment**而言，下发值为数字；对于**signal**、**control**而言，下发值为0或者1）。
-3. 点击**Submit**按钮进行值的单点下发提交。
-4. 点击**Cancel**按钮取消对值的单点下发。
-5. 下发成功，值发生改变。
+![16](/images/Setting/Configuration/channel/16.png)
 
-###### 批量下发
+1. Click **Publish** for the target point row to open the single publish dialog.
 
-![17](../public/images/Setting/Configuration/channel/17.png)
+2. Enter the value to publish in the Value input (for **telemetry** and **adjustment**, the value is numeric; for **signal** and **control**, the value is 0 or 1).
+3. Click **Submit** to publish the value.
+4. Click **Cancel** to cancel.
+5. On success, the value changes.
 
-![18](../public/images/Setting/Configuration/channel/18.png)
+###### Bulk Publish
 
-![19](../public/images/Setting/Configuration/channel/19.png)
+![17](/images/Setting/Configuration/channel/17.png)
 
-1. 点击所要批量下发的点位类型页面的**Batch Publish**按钮，进行批量下发操作（只针对当前点位类型）。
+![18](/images/Setting/Configuration/channel/18.png)
 
-2. 在表格中的**Publish**中对下发值进行填入（对于**telemetry**、**adjustment**而言，下发值为数字；对于**signal**、**control**而言，下发值为0或者1）。
-3. 点击**Submit Publish**按钮，进行批量值下发的提交。
-4. 点击**Cancel Publish**按钮，取消批量值下发的操作。
-5. 下发成功，值发生改变。
+![19](/images/Setting/Configuration/channel/19.png)
 
-##### 批量修改点位
+1. Click **Batch Publish** on the target point type tab (only affects the current point type).
 
-![20](../public/images/Setting/Configuration/channel/20.png)
+2. Enter values in the **Publish** column (for **telemetry** and **adjustment**, numeric; for **signal** and **control**, 0 or 1).
+3. Click **Submit Publish** to submit the bulk publish.
+4. Click **Cancel Publish** to cancel.
+5. On success, the values change.
 
-1. 点击点位视图中的Edit按钮，进入对所有点位的编辑模式。
+##### Batch Edit Points
 
-![21](../public/images/Setting/Configuration/channel/21.png)
+![20](/images/Setting/Configuration/channel/20.png)
 
-2. 针对修改过程中的增删改操作，可以通过筛选条件进行筛选（只针对与单个点位类型表格）：
+1. Click **Edit** in the points view to enter batch edit mode for all points.
 
-- **modified**：对进行了实际修改的点位进行筛选，修改后的点位记录左侧显示为蓝色，修改后的数据标为蓝色。
-  ![22](../public/images/Setting/Configuration/channel/22.png)
-- **added**：对通过新增操作添加的点位进行筛选，新增的点位记录左侧以及数据显示为绿色。
-  ![23](../public/images/Setting/Configuration/channel/23.png)
-- **deleted**：对通过删除操作删除的点位进行筛选，删除的点位记录的左侧以及数据显示为红色。
-  ![24](../public/images/Setting/Configuration/channel/24.png)
-- **invalid**：对通过增加、修改后存在问题的点位进行筛选，存在问题的点位记录的左侧显示为橙色，背景显示为暗红色。
-  ![25](../public/images/Setting/Configuration/channel/25.png)
-  点位配置规则：
-- `point_id`：正整数（必填，不可重复）
-- `signal_name`：字符串，禁止包含空格（必填）
-- `scale`：数值（必填）
-- `offset`：数字（必填）
-- `unit`：字符串（选填）
-- `reverse`：true/false（必填）
+![21](/images/Setting/Configuration/channel/21.png)
 
-> **注意：对于点位的修改遵循批量修改原则，即先在本地进行修改，在全部修改完毕并且没有错误出现的前提下，点击Submit按钮才能真正地修改通道 点位中地点位数据，对于后续的mappings的修改也是如此。**
+2. During editing, you can filter by status (only within the current point-type table):
 
-###### 通过文件导入点位信息
+- **modified**: Filters points that were actually modified. Modified rows are shown in blue, and modified data is highlighted in blue.
 
-![26](../public/images/Setting/Configuration/channel/26.png)
+  ![22](/images/Setting/Configuration/channel/22.png)
 
-1. 点击**Import**按钮，选择**.csv格式**的点位文件进行导入，根据不同的点位类型，对文件格式内容有以下要求：
+- **added**: Filters points added via the add operation. Added rows and data are shown in green.
+
+  ![23](/images/Setting/Configuration/channel/23.png)
+
+- **deleted**: Filters points deleted via the delete operation. Deleted rows and data are shown in red.
+
+  ![24](/images/Setting/Configuration/channel/24.png)
+
+- **invalid**: Filters points with issues after add/modify. Problematic rows show orange markers with a dark red background.
+
+  ![25](/images/Setting/Configuration/channel/25.png)
+  Point configuration rules:
+- `point_id`: Positive integer (required, unique)
+- `signal_name`: String, no spaces allowed (required)
+- `scale`: Numeric (required)
+- `offset`: Numeric (required)
+- `unit`: String (optional)
+- `reverse`: true/false (required)
+
+> **Note: Point edits follow batch-edit principles. Make all changes locally first, then click Submit only after all changes are complete and error-free. The same applies to later mapping edits.**
+
+###### Import Points from a File
+
+![26](/images/Setting/Configuration/channel/26.png)
+
+1. Click **Import**, choose a **.csv** file to import. File requirements differ by point type:
 
 * telemetry/adjustment
 
-  - 期望表头**(必须包含以下表头信息，其他额外表头也可以存在，但是并不会起作用)**：
+  - Required headers **(must include the following; extra headers are ignored)**:
 
     `point_id,signal_name,scale,offset,unit,reverse`
 
-  - 字段说明：遵循点位配置规则要求。
+  - Field descriptions: follow the point configuration rules.
 
-  - 格式截图：
+  - Format screenshot:
 
-    <img src="../public/images/Setting/Configuration/channel/27.png" alt="27" style="zoom: 33%;" />
+    <img src="/images/Setting/Configuration/channel/27.png" alt="27" style="zoom: 33%;" />
 
 * signal/control
 
-  * 期望表头(必须包含以下表头信息，其他额外表头也可以存在，但是并不会起作用)：
+  * Required headers (must include the following; extra headers are ignored):
 
     `point_id,point_name,reverse`
 
-  * 字段说明：遵循点位配置规则要求。
+  * Field descriptions: follow the point configuration rules.
 
-  * 格式截图：
+  * Format screenshot:
   
-    <img src="../public/images/Setting/Configuration/channel/27(1).png" alt="27(1)" style="zoom: 33%;" />
+    <img src="/images/Setting/Configuration/channel/27(1).png" alt="27(1)" style="zoom: 33%;" />
 
->**注意：**
+>**Note:**
 >
->- **所有导入的记录将作为“新增”渲染（绿色高亮），即使存在校验错误也会导入，但会标记为“invalid”以便你在界面修正。**
->- **每次导入会整体覆盖当前的点位信息。**
+>- **All imported records are rendered as "added" (green highlight). Even with validation errors, records are imported but marked as "invalid" so you can fix them in the UI.**
+>- **Each import overwrites the current point information.**
 
-###### 新增点位
+###### Add Points
 
-![28](../public/images/Setting/Configuration/channel/28.png)
+![28](/images/Setting/Configuration/channel/28.png)
 
-1. 点击**新增图标**按钮，在对应点位类型表格中的第一行出现可填写的点位行记录。
-2. 对可填写行进行内容填写，遵循配置规则。
-3. 点击**√图标**按钮，完成对填写的点位的本地新增。
-4. 点击**×图标**按钮，取消对于填写点位的本地新增。
-5. 确认新增后点位记录的样式如图所示，可以通过”**added**“筛选条件进行筛选。
+1. Click the **Add** icon button to create an editable row at the top of the current point-type table.
+2. Fill in the row according to the configuration rules.
+3. Click the **checkmark** icon to confirm the local add.
+4. Click the **X** icon to cancel the local add.
+5. After confirmation, the new row appears as shown and can be filtered by **added**.
 
-> **注意：在新增过程中，每个tab中最多只支持对一个点位的新增，即只会出现一个新增行，只有在点击确认图标或者取消图标之后，才可以再次进行新增行的添加。如果已有新增行没有实现确认或者取消操作，再次点击新增按钮，不会有新增行的出现。**
+> **Note: Each tab allows only one pending add at a time. A new add row appears only after the previous add is confirmed or canceled. If a pending add row exists, clicking Add again will not create another row.**
 
-###### 删除点位
+###### Delete Points
 
-![29](../public/images/Setting/Configuration/channel/29.png)
+![29](/images/Setting/Configuration/channel/29.png)
 
-1. 点击所要删除行的**删除图标**按钮，实现点位的本地删除。
-2. 本地删除后的点位记录的样式如图所示，可以通过”**delected**“筛选条件进行筛选。
-3. 可以点击删除行后的复原图标按钮进行复原，此时会撤销本地的删除操作。
+1. Click the **delete** icon for the target row to delete it locally.
+2. Deleted rows appear as shown and can be filtered by **deleted**.
+3. Click the restore icon to undo the local delete.
 
-###### 修改点位
+###### Modify Points
 
-![30](../public/images/Setting/Configuration/channel/30.png)
+![30](/images/Setting/Configuration/channel/30.png)
 
-1. 点击所要修改的点位的**修改图标**按钮对点位进行修改。
-2. 依照点位的配置规则，对点位进行修改，对已有点位进行修改的时候，不可以修改id。
-3. 如果是对新增的点位进行修改，则是可以修改id的。
-4. 点击**确认图标**按钮，本地保存对点位的修改。
-5. 点击**取消图标**按钮，取消本次对点位的修改。
-6. 本地修改后的点位记录样式如图所示，其会把修改的数据使用蓝色进行标记。可以通过“**modified**”筛选条件进行筛选。
+1. Click the **edit** icon for the target point to modify it.
+2. Modify according to the configuration rules. For existing points, the ID cannot be changed.
+3. For newly added points, the ID can be changed.
+4. Click the **confirm** icon to save the local modification.
+5. Click the **cancel** icon to cancel the modification.
+6. Modified rows appear as shown, with changed data marked in blue and filterable by **modified**.
 
-###### 提交所有修改
+###### Submit All Changes
 
-![31](../public/images/Setting/Configuration/channel/31.png)
+![31](/images/Setting/Configuration/channel/31.png)
 
-1. 在提交时必须保证修改的点位数据没有问题，错误提示会出现在错误数据下方。
-2. 点击**Submit**按钮进行批量修改提交。
-3. 点击**Cancel Edit**按钮，退出修改，点位表展示初始值。
+1. Before submission, ensure all modified point data is valid. Errors appear below invalid data.
+2. Click **Submit** to submit the batch changes.
+3. Click **Cancel Edit** to exit edit mode and restore the original point data.
 
-> **注意：无需手动进行查询，直接点击Submit按钮之后，若有问题可以直接进行跳转。**
+> **Note: You do not need to run a manual search. After clicking Submit, if issues exist you can jump directly to them.**
 
-##### 导出点位CSV文件
+##### Export Point CSV Files
 
-![32](../public/images/Setting/Configuration/channel/32.png)
+![32](/images/Setting/Configuration/channel/32.png)
 
-点击**Export**按钮，可以实现对当前tab下面的表格数据进行导出，导出格式为**.csv**，文件名称为：**通道的名称+tab名称（telemetry/signal/control/adjustment）+当前时间戳**。
+Click **Export** to export the table data under the current tab as **.csv**. The filename format is: **channel name + tab name (telemetry/signal/control/adjustment) + current timestamp**.
 
-#### 通道点位映射配置
+#### Channel Point Mapping Configuration
 
-##### 批量修改点位的映射
+##### Batch Edit Point Mappings
 
-![33](../public/images/Setting/Configuration/channel/33.png)
+![33](/images/Setting/Configuration/channel/33.png)
 
-1. 在**mappings**视图中，点击**Edit**按钮，进入到点位映射的修改中。
+1. In the **mappings** view, click **Edit** to enter mapping edit mode.
 
-![34](../public/images/Setting/Configuration/channel/34.png)
+![34](/images/Setting/Configuration/channel/34.png)
 
-1. 针对修改过程中的修改操作，可以通过筛选条件进行筛选：
+1. During editing, you can filter changes by:
 
-- **modified**：对进行了实际修改的点位进行筛选，修改后的点位记录左侧显示为蓝色，修改后的数据标为蓝色。
+- **modified**: Filters points that were actually modified. Modified rows are shown in blue, and modified data is highlighted in blue.
 
-![35](../public/images/Setting/Configuration/channel/35.png)
+![35](/images/Setting/Configuration/channel/35.png)
 
-- **invalid**：对通过增加、修改后存在问题的点位进行筛选，存在问题的点位记录的左侧显示为橙色，背景显示为暗红色。
+- **invalid**: Filters points with issues after add/modify. Problematic rows show orange markers with a dark red background.
 
-![36](../public/images/Setting/Configuration/channel/36.png)
+![36](/images/Setting/Configuration/channel/36.png)
 
-点位映射配置规则（不同的通道类型其点位的映射信息不同）：
+Point mapping rules (mapping fields differ by channel type):
 
 **modbus_rtu/modbus_tcp:**
 
-- **Function Code**取决于当前的点位类型（四遥）：
-  - **telemetry**：3、4
-  - **signal**：1、2、3、4
-  - **control**：5、15、6、16
-  - **adjustment**：6、16
-- **Data Type**：
-  - **telemetry**：int16、uint16、int32、float32、uint32、int64、uint64、float64
-  - **signal**：同 telemetry，此外允许 bool
-  - **control**：同 telemetry，此外允许 bool
-  - **adjustment**：同 telemetry
-- **Byte Order**的可选项由数据长度决定：
-  - **bool**：无限制
-  - **16 位**：AB、BA
-  - **32 位**：AB、BA、ABCD、DCBA、BADC、CDAB
-  - **64 位**：在 32 位基础上增加 ABCDEFGH、HGFEDCBA、BADCFEHG、GHEFCDAB
-- **Bit Position**：**仅在“dataType为bool并且functionCode为3/4”或“16 位”整数类型下可编辑（0-15），其他类型固定为 0。**
+- **Function Code** depends on point type (four-remote):
+  - **telemetry**: 3, 4
+  - **signal**: 1, 2, 3, 4
+  - **control**: 5, 15, 6, 16
+  - **adjustment**: 6, 16
+- **Data Type**:
+  - **telemetry**: int16, uint16, int32, float32, uint32, int64, uint64, float64
+  - **signal**: same as telemetry, plus bool
+  - **control**: same as telemetry, plus bool
+  - **adjustment**: same as telemetry
+- **Byte Order** options depend on data length:
+  - **bool**: no restriction
+  - **16-bit**: AB, BA
+  - **32-bit**: AB, BA, ABCD, DCBA, BADC, CDAB
+  - **64-bit**: adds ABCDEFGH, HGFEDCBA, BADCFEHG, GHEFCDAB to the 32-bit list
+- **Bit Position**: **Editable only when dataType is bool with functionCode 3/4, or for 16-bit integers (0-15). Other types are fixed at 0.**
 
-###### 通过文件导入点位映射信息
+###### Import Point Mappings from File
 
-![37](../public/images/Setting/Configuration/channel/37.png)
+![37](/images/Setting/Configuration/channel/37.png)
 
-1. 点击**Import**按钮，选择csv格式的点位文件进行导入，根据不同的通道类型，对文件格式内容有不同的要求要求：
+1. Click **Import** and select a CSV file to import. Requirements differ by channel type:
 
 * **modbus_rtu/modbus_tcp**
 
-  - 期望表头：
+  - Required headers:
 
     `point_id,slave_id,function_code,register_address,data_type,byte_order,bit_position`
 
-  - 字段说明：遵循点位配置规则要求。
+  - Field descriptions: follow the point configuration rules.
 
-  - 格式截图：
+  - Format screenshot:
 
-    <img src="../public/images/Setting/Configuration/channel/38.png" alt="38" style="zoom:50%;" />
+    <img src="/images/Setting/Configuration/channel/38.png" alt="38" style="zoom:50%;" />
 
 * **di_do**
 
-  * 期望表头：
+  * Required headers:
 
     `point_id,gpio_number`
 
-  - 字段说明：遵循点位配置规则要求。
+  - Field descriptions: follow the point configuration rules.
 
-  - 格式截图：
+  - Format screenshot:
   
-    <img src="../public/images/Setting/Configuration/channel/38(1).png" alt="38(1)" style="zoom:50%;" />
+    <img src="/images/Setting/Configuration/channel/38(1).png" alt="38(1)" style="zoom:50%;" />
 
->**注意：**
+>**Note:**
 >
->* **通过文件导入的形式进行实例点位映射修改的时候，其会整体覆盖当前的点位路由信息。**
->* **导入时会根据点位id来进行逐一匹配。如果文件中点位id在页面中的点位中并不存在，则会进行忽略；如果文件中有重复的点位映射信息，那么会使用较后面的点位映射信息。**
-
-###### 手动修改点位映射
-
-![39](../public/images/Setting/Configuration/channel/39.png)
-
-1. 点击所要修改的点位的**修改图**标按钮对点位进行修改。
-2. 依照点位的配置规则，对点位进行修改，对已有点位进行修改的时候，不可以修改id。
-3. 点击**确认图标**按钮，本地保存对点位的修改。
-4. 点击**取消图标**按钮，取消本次对点位的修改。
-5. 本地修改后的点位记录样式如图所示，其会把修改的数据使用蓝色进行标记。可以通过“modified”筛选条件进行筛选。
-
-###### 提交所有修改
-
-![40](../public/images/Setting/Configuration/channel/40.png)
-
-1. 在提交时必须保证修改的点位映射数据没有问题，错误提示会出现在错误数据下方。
-2. 点击**Submit**按钮进行批量修改提交。
-3. 点击**Cancel Edit**按钮，退出修改，点位表展示初始值。
-    注意：无需手动进行查询，直接点击**Submit**按钮之后，若有问题可以直接进行跳转。
-
-##### 导出点位映射CSV文件
-
-![41](../public/images/Setting/Configuration/channel/41.png)
-
-1. 点击**Export**按钮，可以实现对当前点位类型下面的表格数据进行导出，导出格式为**.csv**，文件名称为：**通道的名称 + tab名称（telemetry/signal/control/adjustment） + "_mapping" + 当前时间戳**。
-
-## 设备实例以及实例点位配置
-
-![1](../public/images/Setting/Configuration/deviceInstance/1.png)
-
-### 基础概念
-
-在微电网 EMS 中，为了标准化设备接入与点位管理，引入了产品、实例、实例点位与点位路由（映射）等基础概念：产品定义一类设备的标准能力与点位模型；实例是产品在现场的一台具体设备对象；实例点位用于表达该设备的配置与运行数据，按用途分为 **property（属性）/ measurement（测量）/ action（动作）**；实例映射（路由）则把实例点位绑定到现场通道点（并区分四遥类型 T/S/C/A），从而实现测量数据上送与控制/调节指令下发的准确对接。
-#### 产品
-##### 概念定义 
-
-产品是平台对一类设备/系统的标准化模型，用于抽象该类对象在 EMS 中应具备的能力与数据接口。产品不代表现场某台具体设备，而代表同一类型设备的共性结构与标准接口，它描述这类设备在平台里应该长什么样、有哪些能力：
-
-- 有哪些点位（属性点位、测量点位、动作点位）
-- 每个点位代表什么含义（例如：SOC、功率、告警、启停、功率设定等）
-产品不是现场的某一台设备，而是“同类设备通用的定义”。
-本平台中提供以下产品：
-- **battery_cell（电芯）**
-  - 定义：电池系统最小电化学单元。
-  - 作用：提供最底层的电压/温度等基础数据来源，是 BMS 精细化监测与安全评估的基础。
-- **battery_module（电池模组）**
-  - 定义：由多个电芯组成的结构与电气组合单元。
-  - 作用：汇聚电芯级数据，常用于模组电压、温度分布、均衡/保护等管理与展示。
-- **battery_cluster（电池簇/电池组）**
-  - 定义：由多个电池模组组成的更高一级聚合单元（也常对应“一个簇 BMS”管理范围）。
-  - 作用：提供簇级 SOC/SOH、簇电压/电流、簇告警等关键运行视图，便于 EMS 做策略与安全联动。
-- **battery_stack（电池堆/电池串列）**
-  - 定义：由多个电池簇组成的系统级串并联组合单元（工程上常对应一个电池堆）。
-  - 作用：提供系统级直流侧关键量（总电压/总电流/总功率等）及堆级告警，用于与 PCS/直流变换环节联动。
-- **battery_pack（电池包/电池系统包）**
-  - 定义：电池侧在 EMS 里更偏“资产/系统”的抽象对象（通常用于汇总一个储能电池系统的整体能力）。
-  - 作用：用于容量、额定参数、运行统计、告警汇总、报表与资产管理；常作为 BESS 电池侧的顶层对象。
-- **dc_dc_converter（DC/DC 变换器）**
-  - 定义：直流-直流功率变换设备（升压/降压/隔离等）。
-  - 作用：实现不同直流母线电压等级的匹配、能量调节与保护协同；常用于电池侧/直流母线侧的功率控制链路。
-- **pcs（储能变流器 / Power Conversion System）**
-  - 定义：储能系统核心功率变换设备（DC↔AC）。
-  - 作用：执行充放电功率控制、并网/离网运行、无功支撑、电能质量控制等；是 EMS 策略下发与执行的关键对象。
-- **diesel_generator（柴油发电机）**
-  - 定义：可控的备用/应急/调峰电源。
-  - 作用：在离网或电网薄弱场景提供稳定电源；支持启停控制、功率调节、运行状态与故障监测。
-- **motor（电机）**
-  - 定义：电机类负载/设备（可作为动力设备或关键工艺设备抽象）。
-  - 作用：用于监测运行状态、功率/电流等；部分场景可做启停/调速控制（取决于现场控制系统与接入点位）。
-- **load（负荷）**
-  - 定义：用电侧的汇总对象或可控负荷对象（如园区负荷、楼宇负荷、产线负荷等）。
-  - 作用：作为 EMS 负荷预测、能量平衡、削峰填谷与需求响应的核心输入；可扩展为可控负荷时支持策略联动。
-- **pv_string（光伏组串）**
-  - 定义：组件串联形成的发电单元。
-  - 作用：组串级电压/电流/功率监测，便于定位遮挡、失配、衰减等问题（视接入能力而定）。
-- **pv_optimizer（优化器）**
-  - 定义：组件/组串级的功率优化与监测装置。
-  - 作用：提升发电效率、支持更细粒度监测与故障定位；通常与组串/组件级数据关联。
-- **pv_combiner（汇流箱）**
-  - 定义：多路组串并联汇流到直流母线的设备。
-  - 作用：汇总组串回路、提供支路电流/开关/防雷等监测与保护信息，是组串到逆变器之间的关键节点。
-- **pv_inverter（光伏逆变器）**
-  - 定义：将光伏直流电转换为交流并网/供电的设备。
-  - 作用：输出功率控制、并网运行管理、无功/电能质量支撑、状态告警监测；是 EMS 光伏侧主要被控/被监测对象。
-- **gateway（网关）**
-  - 定义：连接现场设备与云端/平台的采集与协议转换节点。
-  - 作用：承载通道与协议、完成数据采集上送与指令下发；负责点位映射、缓存、边缘计算/转发等（按实现能力）。
-- **station（站点/场站）**
-  - 定义：微电网/场站的顶层组织对象（一个项目或一个站）。
-  - 作用：承载该站的设备树、拓扑与汇总指标（如站级功率/能量/告警），用于权限、报表、调度策略与运维管理的统一入口。
-
-##### 作用
-
-- 统一同类设备的点位集合与语义（标准化）
-- 支持批量实例化（同一产品可创建多个设备实例）
-- 便于系统接入、运维、配置复用
-
-#### 实例
-##### 概念定义
+>* **When modifying instance point mappings by import, the imported data overwrites the current mapping information.**
+>* **During import, points are matched by point ID. If a point ID does not exist on the page, it is ignored. If duplicate mappings exist, the later one is used.**
+
+###### Manually Edit Point Mappings
+
+![39](/images/Setting/Configuration/channel/39.png)
+
+1. Click the **edit icon** for the target point mapping to modify it.
+2. Modify according to the mapping rules. For existing points, the ID cannot be changed.
+3. Click the **confirm icon** to save the local change.
+4. Click the **cancel icon** to cancel.
+5. Modified rows appear as shown, with changed data marked in blue and filterable by **modified**.
+
+###### Submit All Changes
+
+![40](/images/Setting/Configuration/channel/40.png)
+
+1. Before submission, ensure all mapping data is valid. Errors appear below invalid data.
+2. Click **Submit** to submit the batch changes.
+3. Click **Cancel Edit** to exit edit mode and restore the original mapping data.
+    Note: You do not need to run a manual search. After clicking **Submit**, if issues exist you can jump directly to them.
+
+##### Export Point Mapping CSV Files
+
+![41](/images/Setting/Configuration/channel/41.png)
+
+1. Click **Export** to export the table data for the current point type as **.csv**. The filename format is: **channel name + tab name (telemetry/signal/control/adjustment) + "_mapping" + current timestamp**.
+
+## Device Instances and Instance Point Configuration
+
+![Device Instance Configuration](/images/Setting/Configuration/deviceInstance/1.png)
+
+This chapter includes: instance management, instance point configuration, and instance point routing configuration.
+
+### Basic Concepts
+
+#### Product
+##### Definition
+
+A product is a standardized model for a device/system type in the platform, used to abstract the capabilities and data interfaces that this type should have in EMS. A product does not represent a specific on-site device, but rather the common structure and standard interface of the same device type. It defines what the device looks like in the platform and what capabilities it has:
+
+- What points it includes (property points, measurement points, action points)
+- What each point represents (e.g., SOC, power, alarms, start/stop, power setpoints, etc.)
+A product is not a specific on-site device, but a "generic definition for similar devices."
+The platform provides the following products:
+- **battery_cell** (cell)
+  - Definition: The smallest electrochemical unit of a battery system.
+  - Role: Provides the most basic voltage/temperature data, the foundation for BMS monitoring and safety evaluation.
+- **battery_module** (battery module)
+  - Definition: A structural and electrical unit composed of multiple cells.
+  - Role: Aggregates cell-level data, commonly used for module voltage, temperature distribution, balancing/protection management and display.
+- **battery_cluster** (battery cluster/battery bank)
+  - Definition: A higher-level aggregation composed of multiple battery modules (often corresponding to the scope of one cluster BMS).
+  - Role: Provides cluster-level SOC/SOH, voltage/current, alarms, enabling EMS strategy and safety coordination.
+- **battery_stack** (battery stack/string)
+  - Definition: A system-level series/parallel unit composed of multiple battery clusters (often one battery stack in engineering practice).
+  - Role: Provides system-level DC key metrics (total voltage/total current/total power) and stack-level alarms for coordination with PCS/DC conversion.
+- **battery_pack** (battery pack/battery system pack)
+  - Definition: A more asset/system-oriented abstraction for the battery side in EMS (often used to summarize the overall capability of a BESS battery system).
+  - Role: Used for capacity, ratings, runtime statistics, alarm aggregation, reporting, and asset management; often serves as the top-level battery object for BESS.
+- **dc_dc_converter** (DC/DC converter)
+  - Definition: DC-to-DC power conversion equipment (boost/buck/isolation, etc.).
+  - Role: Matches different DC bus voltage levels and supports energy regulation and protection coordination; commonly used in battery-side/DC bus power control loops.
+- **pcs** (power conversion system)
+  - Definition: Core power conversion equipment in energy storage systems (DC-AC).
+  - Role: Executes charge/discharge power control, grid-connected/off-grid operation, reactive support, and power quality control; key target for EMS strategies and execution.
+- **diesel_generator** (diesel generator)
+  - Definition: Controllable backup/emergency/peak-shaving power source.
+  - Role: Provides stable power in off-grid or weak-grid scenarios; supports start/stop control, power regulation, operating status, and fault monitoring.
+- **motor** (motor)
+  - Definition: Motor-type load/device (as a drive device or key process device abstraction).
+  - Role: Used to monitor operating status, power/current, etc.; some scenarios support start/stop or speed control (depending on site control and points).
+- **load** (load)
+  - Definition: Aggregated load or controllable load object on the consumption side (e.g., campus load, building load, production line load).
+  - Role: Core input for EMS load forecasting, energy balance, peak shaving, and demand response; supports strategy linkage when extended as controllable load.
+- **pv_string** (PV string)
+  - Definition: A generation unit formed by series-connected modules.
+  - Role: String-level voltage/current/power monitoring, helpful for locating shading, mismatch, and degradation issues (depending on access capability).
+- **pv_optimizer** (optimizer)
+  - Definition: Module/string-level power optimization and monitoring device.
+  - Role: Improves generation efficiency and supports finer-grained monitoring and fault localization; typically associated with string/module data.
+- **pv_combiner** (combiner box)
+  - Definition: Device that combines multiple strings in parallel to a DC bus.
+  - Role: Aggregates string circuits and provides branch current/switch/surge protection monitoring; key node between strings and inverters.
+- **pv_inverter** (PV inverter)
+  - Definition: Device that converts PV DC power to AC for grid connection/supply.
+  - Role: Output power control, grid operation management, reactive/power-quality support, and status/alarm monitoring; main controlled/monitored object on the PV side in EMS.
+- **gateway** (gateway)
+  - Definition: Acquisition and protocol conversion node connecting site devices to the cloud/platform.
+  - Role: Hosts channels and protocols, performs data acquisition upload and command delivery; responsible for point mapping, caching, edge computing/forwarding (depending on implementation).
+- **station** (site/station)
+  - Definition: Top-level organizational object for a microgrid/site (one project or one station).
+  - Role: Hosts the site device tree, topology, and aggregate metrics (site power/energy/alarms), and serves as the unified entry for permissions, reporting, dispatch strategies, and O&M.
+
+##### Role
+
+- Unify point collections and semantics for the same device type (standardization)
+- Support bulk instantiation (multiple device instances for one product)
+- Facilitate system integration, operations, and configuration reuse
+
+#### Instance
+##### Definition
 
-实例是产品模型在现场工程中的具体对象化表达（Asset/Device Instance），对应实际存在的一台设备、一个系统单元或一个逻辑对象（如 PCS_01、BESS_01、PCC_METER_01）。实例具有唯一标识 instance_id，并绑定一个 product_name，继承该产品的点位体系。
-实例不仅是展示层的“设备条目”，更是平台进行状态计算、控制下发、告警定位等行为的最小业务承载单元。
+An instance is the concrete object of a product model in a site project (Asset/Device Instance), corresponding to an actual device, system unit, or logical object (e.g., PCS_01, BESS_01, PCC_METER_01). An instance has a unique `instance_id` and binds to a `product_name`, inheriting the product's point system.
+An instance is not only a display "device item" but also the smallest business unit for status calculation, control issuance, and alarm positioning on the platform.
 
-##### 字段解释
+##### Field Description
 
-* `insance_id`：实例的id，是唯一的标识符。
-* `instance_name`：实例的名称。
-* `product_name`：实例所属的产品名称。
-* `properties`：实例自身的属性。
+* `insance_id`: Instance ID, a unique identifier.
+* `instance_name`: Instance name.
+* `product_name`: Name of the product the instance belongs to.
+* `properties`: Instance properties.
 
-##### 作用
+##### Role
 
-- 将“模板（产品）”落到“现场对象（实例）”
-- 实例承载产品设备的配置属性（properties）与运行点位（measurement/action）
-- 与现场通道（四遥）建立映射，实现数据采集与控制下发
+- Apply the "template (product)" to the "site object (instance)"
+- Instances carry the product's configuration properties and runtime points (measurement/action)
+- Map to site channels (four-remote) to enable data acquisition and control issuance
 
-#### 实例点位
-##### 概念定义
+#### Instance Points
+##### Definition
 
-实例点位是实例在平台中的“数据接口”，用于表达该实例可被配置、可被观测、可被控制的所有信息。
-实例点位分为以下三类：
+Instance points are the "data interfaces" of an instance in the platform, representing all information that can be configured, observed, and controlled.
+Instance points fall into three categories:
 
-- **property 点位**
-  用于描述设备“静态/半静态配置参数”，例如：额定功率、容量、通信地址、控制策略参数、告警阈值等。
-  作用：
-  - 作为实例的配置数据来源
-  - 用于策略计算、限值校验、展示与运维配置
-  - 通常不高频变化（可由人工配置/策略写入）
-- **measurement 点位**
-  表示设备“可被采集的状态/遥测/遥信”数据，如电压、电流、功率、SOC、开关状态、告警状态等。
-  作用：
-  - 实时监测与可视化
-  - 告警、联动、报表、优化调度的输入数据
-- **action 点位**
-  表示“可下发控制/调节”的点位，如启动/停机、合闸/分闸、有功/无功设定、充放电功率设定、模式切换等。
-  作用：
-  - EMS 控制闭环输出（策略/人工操作 → 下发到设备）
-  - 支持控制（Control）与调节（Adjustment）两类指令
+- **property points**
+  Describe "static/semi-static configuration parameters" such as rated power, capacity, communication address, control strategy parameters, alarm thresholds, etc.
+  Role:
+  - Serve as the source of instance configuration data
+  - Used for strategy calculation, limit checks, display, and operations configuration
+  - Usually not high-frequency changes (can be set manually or by strategy)
+- **measurement points**
+  Represent "observable status/telemetry/signal" data such as voltage, current, power, SOC, switch status, alarm status, etc.
+  Role:
+  - Real-time monitoring and visualization
+  - Input data for alarms, linkage, reporting, and optimization dispatch
+- **action points**
+  Represent points that can be issued for control/adjustment, such as start/stop, close/open, active/reactive setpoints, charge/discharge power setpoints, mode switching, etc.
+  Role:
+  - EMS control-loop output (strategy/manual operation -> device)
+  - Support both Control and Adjustment commands
 
-##### 字段解释
+##### Field Description
 
-* `point_id`：点位在其所在的点位分类中的唯一标识。
-* `name`：点位名称。
-* `value`：当前点位的值。
-* `unit`：点位的单位。
-* `description`：点位的备注信息。
+* `point_id`: Unique identifier within the point category.
+* `name`: Point name.
+* `value`: Current point value.
+* `unit`: Point unit.
+* `description`: Point description.
 
-##### 作用
+##### Role
 
-- 统一语义与数据治理。将不同协议、不同厂家的原始点号统一映射为一致的语义点位，便于上层应用理解与复用。
-- 作为监控与告警的基础颗粒度。趋势曲线、阈值告警、事件联动、报表统计都以点位为基本对象。
-- 作为控制闭环的输入/输出接口，策略读取 **measurement** 点位形成状态判断，向 **action** 点位写入目标值触发下发。
+- Unify semantics and data governance. Map different protocols and vendor raw points into consistent semantic points for upper-layer understanding and reuse.
+- Base granularity for monitoring and alarms. Trends, threshold alarms, event linkage, and reporting all rely on points.
+- Input/output for the control loop. Strategies read **measurement** points to determine state and write to **action** points to issue targets.
 
-#### 实例点位路由
-##### 概念定义
+#### Instance Point Routing
+##### Definition
 
-实例点位映射就是把平台里的“实例点位”绑定到现场的“通道点位/点号”的配置关系，它回答一个关键问题：
-**这个实例的这个点位，对应现场哪条通道、哪个点号？属于四遥中的哪一类？**
+Instance point mapping binds platform "instance points" to on-site "channel points/addresses." It answers the following key questions for each instance point:
+**Which channel and point on-site does it map to? Which of the four remote types does it belong to?**
 
-* 对于 **measurement** 点位，其对应的通道点位的类型只能是 **Telemetry** 和 **Signal**。
-* 对于 **action** 点位，其对应的通道点位的类型只能是 **Control** 和 **Adjustment**。
-* **property** 点位作为固有属性，没有路由信息。
+* For **measurement** points, the channel point type can only be **Telemetry** or **Signal**.
+* For **action** points, the channel point type can only be **Control** or **Adjustment**.
+* **property** points are intrinsic attributes and have no routing info.
 
-##### 字段解释
+##### Field Description
 
-* `point_id`：对应实例点位的id。
-* `name`：对应点位的名称。
-* `channel_id`：点位对应路由的通道的id。
-* `channel_type`：点位对应路由的通道的四遥类型。
-* `channel_point_id`：点位对应路由的通道点位id。
+* `point_id`: ID of the instance point.
+* `name`: Name of the point.
+* `channel_id`: ID of the channel used by the route.
+* `channel_type`: Four-remote type of the channel point.
+* `channel_point_id`: Channel point ID used by the route.
 
-##### 作用
+##### Role
 
-- 数据上行（采集）。通道采到的数据按映射路由到对应的 measurement 点位。
-- 指令下行（控制）。对 action 点位写入的值按映射路由到对应的通道点号下发给设备。
-- 解耦业务与协议。业务侧只关心点位语义；通信侧只关心地址点号；映射把两者连接起来，便于换协议/换网关/改点表。
+- Data uplink (acquisition). Channel data is routed to the corresponding measurement points.
+- Command downlink (control). Values written to action points are routed to the corresponding channel points and sent to devices.
+- Decouple business and protocol. Business logic focuses on point semantics; communication focuses on addresses; mapping connects them to allow protocol/gateway/point-table changes.
 
-### 配置操作
+### Configuration Operations
+#### Query Device Instances
 
-#### 查询设备实例
+![2](/images/Setting/Configuration/deviceInstance/2.png)
 
-![2](../public/images/Setting/Configuration/deviceInstance/2.png)
+1. You can filter instances by:
+- `Product_Name`: The product name of the instance.
+2. Click **Search** to filter.
+3. Click **Reload** to reset.
 
-1. 支持对实例进行筛选。筛选条件有：
-- `Product_Name`：实例所属的产品名称。
-2. 点击**Search**按钮，进行筛选搜索。
-3. 点击**Reload**按钮，进行搜索重置。
+#### Add a Device Instance
 
-#### 新增设备实例
+![3](/images/Setting/Configuration/deviceInstance/3.png)
 
-![3](../public/images/Setting/Configuration/deviceInstance/3.png)
+![4](/images/Setting/Configuration/deviceInstance/4.png)
 
-![4](../public/images/Setting/Configuration/deviceInstance/4.png)
+1. Click **New Instance** to open the add dialog.
 
-1. 点击New Instance按钮，打开新增实例弹框。
+2. Enter the required parameters. Refer to the instance field definitions in the basic concepts.
+3. Click the add property icon to add a property value.
+4. Click the delete property icon to remove a property value.
+5. Click **Submit** to create the instance.
+6. Click **Cancel** to cancel.
 
-2. 填入正确的参数，字段详情参考基础概念实例的字段介绍。
-3. 点击属性添加图标按钮，可以添加一条属性值。
-4. 点击属性删除图标按钮，可以删除对应的属性值。
-5. 点击Submit按钮，提交新增的实例。
-6. 点击Cancel按钮，取消新增。
+#### View Device Instance Details
 
-#### 查看设备实例详情
+![5](/images/Setting/Configuration/deviceInstance/5.png)
 
-![5](../public/images/Setting/Configuration/deviceInstance/5.png)
+![6](/images/Setting/Configuration/deviceInstance/6.png)
 
-![6](../public/images/Setting/Configuration/deviceInstance/6.png)
+1. Click **Detail** in the **Operation** column to open the instance details dialog.
 
-1. 点击所要查看的实例Operation列中的Detail按钮，打开实例详情弹框。
+#### Edit Device Instances
 
-#### 编辑设备实例
+![7](/images/Setting/Configuration/deviceInstance/7.png)
 
-![7](../public/images/Setting/Configuration/deviceInstance/7.png)
+![8](/images/Setting/Configuration/deviceInstance/8.png)
 
-![8](../public/images/Setting/Configuration/deviceInstance/8.png)
+1. In the instance details dialog, click **Edit** to enter edit mode.
 
-1. 在查看实例详情的弹框中，点击**Edit**按钮进入实例信息的编辑模式。
+2. During editing, `Product Name` cannot be changed; other fields are the same as in add.
+3. Click **Submit** to save changes.
+4. Click **Cancel Edit** to cancel.
 
-2. 在修改中，除去`Product Name`无法进行修改，其余修改与新增中一致。
-3. 点击**Submit**按钮进行修改提交。
-4. 点击**Cancel Edit**按钮取消编辑。
+#### Delete Device Instances
 
-#### 删除已有的设备实例
+![9](/images/common/9.png)
 
-![9](../public/images/common/9.png)
 
 
+![10](/images/Setting/Configuration/deviceInstance/10.png)
 
-![10](../public/images/Setting/Configuration/deviceInstance/10.png)
+1. Click **Delete** in the **Operation** column for the target device instance row.
 
-1. 点击想要删除的设备实例行中**Operation**列的**Delete**按钮进行删除。
+2. Click **Confirm** to delete.
+3. Click **Cancel** to cancel.
 
-2. 点击**Confirm**按钮确认删除。
-3. 点击Cancel按钮取消删除。
+#### Instance Point Configuration
 
-#### 设备实例点位配置
 
-![11](../public/images/Setting/Configuration/deviceInstance/11.png)
+![11](/images/Setting/Configuration/deviceInstance/11.png)
 
-![12](../public/images/Setting/Configuration/deviceInstance/12.png)
+![12](/images/Setting/Configuration/deviceInstance/12.png)
 
-1. 通过点击想要查看的设备实例行**Operation**列的**Points**按钮，打开点位弹框。
+1. Click **Points** in the **Operation** column of the target instance row to open the points dialog.
 
-2. **View Mode** 选框用于切换视图，视图分为点位视图和点位路由视图，点击按钮进行切换（默认为点位视图）。
-3. 用于切换表格中展示的点位类型的标签按钮，在点位视图中有三个标签：**Property**、**measurement**、**action**。
-4. 点位筛选框，可以手动输入进行点位名称的模糊搜索或者通过下拉框对点位名称的选择进行精准搜索。
-5. **Export**按钮，用于把当前点位类型表格数据以csv的格式进行导出。
-6. **Execute**按钮，用于执行下发点位值。
-7. **Cancel**按钮，用于关闭弹框。
+2. The **View Mode** selector switches between point view and routing view (default is point view).
+3. Use the tabs to switch point types. In point view there are three tabs: **Property**, **measurement**, **action**.
+4. The point filter box supports fuzzy search by name or precise search via dropdown selection.
+5. **Export** exports the current point-type table as CSV.
+6. **Execute** issues a point command.
+7. **Cancel** closes the dialog.
 
-##### 点位命令下发
+##### Issue Point Commands
 
-![13](../public/images/Setting/Configuration/deviceInstance/13.png)
+![13](/images/Setting/Configuration/deviceInstance/13.png)
 
-![14](../public/images/Setting/Configuration/deviceInstance/14.png)
+![14](/images/Setting/Configuration/deviceInstance/14.png)
 
-![15](../public/images/Setting/Configuration/deviceInstance/15.png)
+![15](/images/Setting/Configuration/deviceInstance/15.png)
 
-2. 点击所要执行某一数值的点位所在行**Operation**列的**Execute**按钮，打开执行弹框。
-3. 输入要执行的值（数字）。
-4. 点击**Submit**按钮进行提交。
-5. 点击**Cancel**按钮取消提交。
-6. 提交成功后值发生变化。
+2. Click **Execute** in the **Operation** column for the target point to open the execute dialog.
+3. Enter the value to execute (numeric).
+4. Click **Submit** to submit.
+5. Click **Cancel** to cancel.
+6. After successful submission, the value changes.
 
-##### 导出点位CSV文件
+##### Export Point CSV Files
 
-![16](../public/images/Setting/Configuration/deviceInstance/16.png)
+![16](/images/Setting/Configuration/deviceInstance/16.png)
 
-1. 点击**Export**按钮，将当前显示的表格数据进行导出，导出的**.csv文件**的文件名格式为：**实例名称_点位类型（property/measurement/action）_points_当前时间戳.csv**，文件如下图所示：
+1. Click **Export** to export the current table data. The CSV filename format is: **instance name_point type (property/measurement/action)_points_timestamp.csv**. The exported file looks like:
 
-![17](../public/images/Setting/Configuration/deviceInstance/17.png)
+![17](/images/Setting/Configuration/deviceInstance/17.png)
 
-#### 设备实例点位路由配置
-![18](../public/images/Setting/Configuration/deviceInstance/18.png)
+#### Instance Point Routing Configuration
 
-1. 通过点击**view Mode**中的**Routing**进行视图切换，打开实例点位路由视图。
+![18](/images/Setting/Configuration/deviceInstance/18.png)
 
-2. **Edit**按钮，点击以进入点位路由的修改模式。
+1. Switch to **Routing** in **View Mode** to open the instance point routing view.
 
-  > 注意：property点位是产品的固有属性，不需要通过路由与通道点位相通，因此在点位路由中只有measurement类型和action类型。
+2. Click **Edit** to enter routing edit mode.
 
-#### 导出点位路由CSV文件
-![19](../public/images/Setting/Configuration/deviceInstance/19.png)
+  > Note: Property points are inherent product attributes and do not require routing to channel points, so only measurement and action types appear in routing.
 
-2. 点击**Export**按钮，将当前显示的表格数据进行导出，导出的csv文件的文件名格式为：**实例名称_点位类型（measurement/action）_routing_当前时间戳.csv**，文件如下图所示：
-    ![20](../public/images/Setting/Configuration/deviceInstance/20.png)
-    在导出文件中，**point_type**以缩写的形式展示，其对应规则为：**T对应Telemetry，S对应Signal，C对应Control，A对应Adjustment。**
+#### Export Point Routing CSV Files
+![19](/images/Setting/Configuration/deviceInstance/19.png)
 
-##### 批量修改实例点位路由
-![21](../public/images/Setting/Configuration/deviceInstance/21.png)
+2. Click **Export** to export the current table data. The CSV filename format is: **instance name_point type (measurement/action)_routing_timestamp.csv**. Example:
 
-![22](../public/images/Setting/Configuration/deviceInstance/22.png)
+    ![20](/images/Setting/Configuration/deviceInstance/20.png)
 
-1. 点击**Edit**按钮，进入点位路由的编辑模式。
+    In the exported file, **point_type** uses abbreviations: **T = Telemetry, S = Signal, C = Control, A = Adjustment.**
 
-2. 针对修改过程中的修改操作，可以通过筛选条件进行筛选：
+##### Batch Edit Instance Point Routing
 
-- **modified**：对进行了实际修改的点位进行筛选，修改后的点位记录左侧显示为蓝色，修改后的数据标为蓝色。
-![23](../public/images/Setting/Configuration/deviceInstance/23.png)
-- **invalid**：对通过增加、修改后存在问题的点位进行筛选，存在问题的点位记录的左侧显示为橙色，背景显示为暗红色。
-![24](../public/images/Setting/Configuration/deviceInstance/24.png)
+![21](/images/Setting/Configuration/deviceInstance/21.png)
 
-> 点位路由配置规则：
+![22](/images/Setting/Configuration/deviceInstance/22.png)
+
+1. Click **Edit** to enter routing edit mode.
+
+2. During editing, you can filter by:
+
+- **modified**: Filters points that were actually modified. Modified rows are shown in blue, and modified data is highlighted in blue.
+
+![23](/images/Setting/Configuration/deviceInstance/23.png)
+
+- **invalid**: Filters points with issues after add/modify. Problematic rows show orange markers with a dark red background.
+
+![24](/images/Setting/Configuration/deviceInstance/24.png)
+
+> Point routing configuration rules:
 >
-> * Channel为设备实例点位路由映射的通道点位所在的通道。
-> * Channel Point Type为设备实例点位路由映射的通道点位所属的四遥类型，按照通道所遵循协议的不同，其可选值也不同：
->   * 对于遵循modbus_rtu和modbus_tcp协议的通道。其中对于measurement类型的设备实例点位，Channel Point Type只能是Telemetry和Signal，对于action类型的设备实例点位，Channel Point Type只能是Control和Adjustment。
->   * 对于遵循di_do协议的通道。其中对于measurement类型的设备实例点位，Channel Point Type只能是Signal，对于action类型的设备实例点位，Channel Point Type只能是Control。
-> * Channel Point为设备实例点位路由映射的通道点位。
-> * 三个选项的具有先后顺序，需按照Channel->Channel Point Type->Channel Point的顺序进行选择。 
+> * Channel is the channel that hosts the channel point mapped to the instance point.
+> * Channel Point Type is the four-remote type of the mapped channel point. Available values depend on the channel protocol:
+>   * For modbus_rtu and modbus_tcp channels: for measurement points, Channel Point Type can only be Telemetry or Signal; for action points, it can only be Control or Adjustment.
+>   * For di_do channels: for measurement points, Channel Point Type can only be Signal; for action points, it can only be Control.
+> * Channel Point is the channel point mapped to the instance point.
+> * The three fields must be selected in order: Channel -> Channel Point Type -> Channel Point.
 
-###### 手动修改点位路由信息
-![25](../public/images/Setting/Configuration/deviceInstance/25.png)
+###### Manually Edit Routing
 
-1. 点击所要修改的点位路由的**修改图标**按钮对点位进行修改。
-2. 依照点位路由的配置规则，对点位路由进行修改，对已有点位进行修改的时候，不可以修改id。
-3. 点击**确认图标**按钮，本地保存对点位路由的修改。
-4. 点击**取消图标**按钮，取消本次本地对点位路由的修改。
-5. 本地修改后的点位路由记录样式如图所示，其会把修改的数据使用蓝色进行标记。可以通过“**modified**”筛选条件进行筛选。
+![25](/images/Setting/Configuration/deviceInstance/25.png)
 
-###### 通过文件导入点位路由信息
-![26](../public/images/Setting/Configuration/deviceInstance/26.png)
+1. Click the **edit icon** for the target routing row.
+2. Modify according to the routing rules. For existing points, the ID cannot be changed.
+3. Click the **confirm icon** to save the local change.
+4. Click the **cancel icon** to cancel.
+5. Modified rows appear as shown, with changed data marked in blue and filterable by **modified**.
 
-1. 点击**Import**按钮，选择**.csv格式**的点位文件进行导入，对文件的内容有以下要求：
+###### Import Routing from File
 
-- 期望表头**(必须包含以下表头信息，其他额外表头也可以存在，但是并不会起作用)**：
+![26](/images/Setting/Configuration/deviceInstance/26.png)
+
+1. Click **Import** and select a **.csv** file. The file must meet the following requirements:
+
+- Required headers **(must include the following; extra headers are ignored)**:
   `point_id,channel_id,channel_point_type,channel_point_id,enabled`
-  在导入后，会根据**point_id**进行点位与路由信息的匹配。
+  After import, points are matched to routing info by **point_id**.
   
-- 字段说明：
-  - `point_id`为实例点位的id，如果点位不存在，则这条点位路由信息无效。
-  - `point_name`为实例点位的名称。
-  - `channel_id` 为路由映射的通道点位所属通道的id，如果该通道并不存在，则对应的通道点位也视为不存在，会进行错误提示。
-  - `channel_point_type`为路由映射的通道点位所属的点位类型（四遥：T/S/C/A），**其接受四遥的缩写：T、S、C、A，也接受四遥的全称：Telemetry、Signal、Control、Adjustment（注意要严格遵循字母的大小写要求）**。
-  - `channel_point_id`为路由映射的通道点位id，如果该点位不存在，则会进行错误提示。
-  - `enabled`为该点位映射是否可用的标识，接受**false**和**true**两个值。
+- Field descriptions:
+  - `point_id` is the instance point ID. If the point does not exist, the routing is invalid.
+  - `point_name` is the instance point name.
+  - `channel_id` is the ID of the channel containing the mapped channel point. If the channel does not exist, the channel point is considered missing and an error is shown.
+  - `channel_point_type` is the four-remote type of the mapped channel point (T/S/C/A). **It accepts both abbreviations T, S, C, A and full names Telemetry, Signal, Control, Adjustment (case-sensitive).**
+  - `channel_point_id` is the channel point ID. If it does not exist, an error is shown.
+  - `enabled` indicates whether the mapping is enabled; accepts **false** or **true**.
   
-- 格式截图：
+- Format screenshot:
 
-  <img src="../public/images/Setting/Configuration/deviceInstance/27.png" alt="27" style="zoom:50%;" />
+  <img src="/images/Setting/Configuration/deviceInstance/27.png" alt="27" style="zoom:50%;" />
 
-> 注意：
+> Note:
 >
-> * 通过文件导入的形式进行实例点位路由修改的时候，其会整体覆盖当前的点位路由信息。
+> * Importing routing data overwrites the current routing information.
 >
-> * 导入时会根据点位id来进行逐一匹配。如果文件中点位id在页面中的点位中并不存在，则会进行忽略；如果文件中有重复的点位路由信息，那么会使用较后面的点位路由信息。
+> * During import, points are matched by ID. If a point ID does not exist on the page, it is ignored. If duplicates exist, the later one is used.
 
-###### 提交所有的修改
-![28](../public/images/Setting/Configuration/deviceInstance/28.png)
+###### Submit All Changes
 
-1. 在提交时必须保证修改的点位数据没有问题，错误提示会出现在错误数据下方。
-2. 点击**Submit**按钮进行批量修改提交。
-3. 点击**Cancel Edit**按钮，退出修改，点位表展示初始值。
-    注意：无需手动进行查询，直接点击**Submit**按钮之后，若有问题可以直接进行跳转。
+![28](/images/Setting/Configuration/deviceInstance/28.png)
 
-## 规则配置
-![29](../public/images/Setting/Configuration/deviceInstance/29.png)
+1. Before submission, ensure the modified data is valid. Errors appear below invalid data.
+2. Click **Submit** to submit the batch changes.
+3. Click **Cancel Edit** to exit edit mode and restore the original table.
+    Note: You do not need to run a manual search. After clicking **Submit**, if issues exist you can jump directly to them.
 
-### 基础概念
+## Rule Configuration
 
-在 EMS 系统中，电池、PCS、光伏、柴油机等设备之间需要在不断变化的工况下协同运行，系统需要根据实时测量数据做出判断，并及时下发控制指令或调整运行参数（例如功率设定、启停、模式切换等），以实现安全稳定与经济优化的目标。为实现策略的标准化配置与可视化管理，平台引入了**规则（Rule）与规则链路（Rule Flow）**等概念。
-#### 规则
-##### 概念定义
- 规则是 EMS 中用于表达“运行策略”的基本单元，用来描述系统在特定工况下应采取的控制逻辑。它把实时数据（测量值/状态量/计算结果）作为输入，通过条件判断确定当前场景，并输出对应的控制动作或参数调整结果。
-##### 作用
+![29](/images/Setting/Configuration/deviceInstance/29.png)
 
-- 策略固化与自动化执行：把人工经验/调度策略配置成系统可自动执行的逻辑，实现无人值守的策略运行。
-- 运行目标落地：围绕安全、稳定、经济、效率等目标，在不同工况下自动选择合适的控制措施。
-- 统一管理与复用：规则可集中管理（启用/停用、优先级等），便于在不同站点或项目中复用与迁移。
+### Basic Concepts
 
-#### 规则链路
+#### Rule
+##### Definition
+A rule is the basic unit used in EMS to express an "operating strategy." It describes the control logic the system should take under specific conditions. It takes real-time data (measurements/status/computed results) as inputs, determines the current scenario through conditions, and outputs corresponding control actions or parameter adjustments.
+##### Role
 
-##### 概念定义
+- Strategy solidification and automated execution: Configure human experience/dispatch strategies into logic that the system can execute automatically for unattended operation.
+- Operational objectives: Automatically choose appropriate control measures under different conditions to meet safety, stability, economy, and efficiency goals.
+- Unified management and reuse: Rules can be centrally managed (enable/disable, priority, etc.) and reused across different sites or projects.
 
- 规则链路是规则内部的可视化执行流程，用“节点 + 连线”的方式描述规则从开始到结束的完整执行路径。它将规则拆分为多个步骤（如开始、条件判断、动作执行、结束），并通过分支结构表达不同条件下的不同处理路径。
-##### 作用
+#### Rule Flow
 
-- 清晰表达复杂逻辑：把多条件、多分支、多动作的策略以流程图方式呈现，降低理解和配置成本。
-- 可追踪与可诊断：运行时可定位实际执行路径与关键节点数据，帮助快速排查“为何这样执行”。
-- 易维护与易迭代：通过图形化结构快速调整策略步骤与分支关系，支持版本化管理以及导入/导出复用。
+##### Definition
 
-### 配置操作
-#### 新增规则
+A rule flow is the visual execution flow inside a rule. It uses "nodes + links" to describe the full execution path of a rule from start to finish. It breaks a rule into steps (such as start, condition, action, end) and uses branching to express different paths under different conditions.
+##### Role
 
-![2](../public/images/Setting/Configuration/rule/2.png)
+- Clearly express complex logic: Present multi-condition, multi-branch, multi-action strategies as flowcharts, reducing understanding and configuration costs.
+- Traceable and diagnosable: During runtime, the actual execution path and key node data can be located to quickly identify why a decision was made.
+- Easy to maintain and iterate: Quickly adjust steps and branches with a graphical structure, with versioning and import/export reuse.
 
-![3](../public/images/Setting/Configuration/rule/3.png)
+### Configuration Operations
+#### Add a Rule
 
-1. 点击**New Rule**按钮，打开新增规则弹窗。
-2. 输入规则的名称（必填）和描述信息（选填）。
-3. 点击**Submit**按钮进行新增规则的提交。
-4. 点击**Cancel**按钮取消新增操作，关闭弹窗。
+![2](/images/Setting/Configuration/rule/2.png)
 
-#### 修改规则
+![3](/images/Setting/Configuration/rule/3.png)
 
-![4](../public/images/Setting/Configuration/rule/4.png)
+1. Click **New Rule** to open the add dialog.
+2. Enter the rule name (required) and description (optional).
+3. Click **Submit** to create the rule.
+4. Click **Cancel** to cancel and close the dialog.
 
-![5](../public/images/Setting/Configuration/rule/5.png)
+#### Edit a Rule
 
-1. 点击想要修改的规则行中**Operation**列的**Edit**按钮，打开编辑弹框。
-2. 对想要修改的规则名称以及描述信息进行修改。
-3. 点击**Submit**按钮对编辑的信息进行提交。
-4. 点击**Cancel**按钮取消对编辑信息的提交，并且关闭弹窗。
+![4](/images/Setting/Configuration/rule/4.png)
 
-#### 删除规则
+![5](/images/Setting/Configuration/rule/5.png)
 
-![6](../public/images/Setting/Configuration/rule/6.png)
+1. Click **Edit** in the **Operation** column for the target rule to open the edit dialog.
+2. Modify the rule name and description.
+3. Click **Submit** to save changes.
+4. Click **Cancel** to cancel and close the dialog.
 
-![7](../public/images/Setting/Configuration/rule/7.png)
+#### Delete a Rule
 
-1. 点击想要删除的规则行的**Operation**列的**Delete**按钮打开确认删除的提示弹框。
-2. 点击**Confirm**按钮确认删除。
-3. 点击**Cancel**按钮取消删除。
+![6](/images/Setting/Configuration/rule/6.png)
 
-#### 查看规则链路详情及实时执行链路
+![7](/images/Setting/Configuration/rule/7.png)
 
-![8](../public/images/Setting/Configuration/rule/8.png)
+1. Click **Delete** in the **Operation** column for the target rule to open the confirmation dialog.
+2. Click **Confirm** to delete.
+3. Click **Cancel** to cancel.
 
-![9](../public/images/Setting/Configuration/rule/9.png)
+#### View Rule Flow Details and Real-Time Execution Path
 
-![10](../public/images/Setting/Configuration/rule/10.png)
+![8](/images/Setting/Configuration/rule/8.png)
 
-1. 点击所要查看规则行的**Operation**列的**Detail**按钮，挑战到规则链详情页面。
+![9](/images/Setting/Configuration/rule/9.png)
 
-2. 规则链路中高亮的路径为当前规则所执行的路径，当前所执行的路径的节点的具体数据会显示节点的下方位置。
+![10](/images/Setting/Configuration/rule/10.png)
 
-3. 点击**Edit**按钮，进入规则链编辑状态。
+1. Click **Detail** in the **Operation** column of the target rule row to navigate to the rule flow details page.
 
-4. 点击**Export**按钮对当前规则链进行导出，导出文件的格式为**.json文件**，具体内容结构如下：
+2. The highlighted path in the flow is the currently executed path. Node data for the current path is displayed below the node.
+
+3. Click **Edit** to enter rule flow edit mode.
+
+4. Click **Export** to export the current rule flow as a **.json** file. The structure is as follows:
 
   ```
   {
-    "cooldown_ms": 5000, //循环间隔
-    "description": "Control the diesel generators and photovoltaic systems based on the values of SOC.",//规则链描述
-    "enabled": true,//是否可用
-    "flow_json": {//用于记录点位以及线段的信息
-   "edges": [//所有线段的信息
+    "cooldown_ms": 5000, // loop interval
+    "description": "Control the diesel generators and photovoltaic systems based on the values of SOC.", // rule flow description
+    "enabled": true, // enabled
+    "flow_json": { // records point and edge information
+   "edges": [ // all edges
      {
-       "id": "edge-1766625864321",//线段id
-       "source": "start",//线段起点节点
-       "target": "node-1766625792260",//线段结束节点
-       "sourceHandle": "right",//线段起点节点的输出点位id
-       "targetHandle": "left"//线段终点节点的接受点位id
+       "id": "edge-1766625864321", // edge id
+       "source": "start", // source node
+       "target": "node-1766625792260", // target node
+       "sourceHandle": "right", // output handle id on the source node
+       "targetHandle": "left" // input handle id on the target node
      },
      {
        "id": "edge-1766627137707",
@@ -1039,32 +1060,32 @@ outline: deep
        "targetHandle": "left"
      }
    ],
-   "nodes": [//所有节点的信息
+   "nodes": [ // all nodes
      {
-       "id": "start",//节点的id
-       "type": "start",//起始节点
-       "position": {//画布中的位置
-         "x": -213,//x轴坐标
-         "y": 107//y轴坐标
+       "id": "start", // node id
+       "type": "start", // start node
+       "position": { // position on canvas
+         "x": -213, // x coordinate
+         "y": 107 // y coordinate
        },
-       "data": {//内部数据
-         "config": {//点位配置
-           "wires": {//输出点位以及其对应的节点id（除特殊类型点位以外其余默认为default点位）
+       "data": { // internal data
+         "config": { // point config
+           "wires": { // output handles and their target node ids (except for special types, default handle is used)
              "default": [
                "node-1766625792260"
              ]
            }
          },
-         "description": "START",//节点描述信息
-         "id": "start",//节点id
-         "label": "START",//节点的标题
-         "status": "",//节点状态，保留
-         "type": "start"//节点类型
+         "description": "START", // node description
+         "id": "start", // node id
+         "label": "START", // node title
+         "status": "", // node status (reserved)
+         "type": "start" // node type
        }
      },
      {
        "id": "end",
-       "type": "end",//结束点位
+       "type": "end", // end node
        "position": {
          "x": 629,
          "y": 101
@@ -1084,26 +1105,26 @@ outline: deep
      },
      {
        "id": "node-1766625792260",
-       "type": "custom",//自定义的节点类型
+       "type": "custom", // custom node type
        "position": {
          "x": 25,
          "y": 106
        },
        "data": {
          "cardId": "function-2",
-         "config": {//该节点为function-switch类型的节点，主要用来条件判断
-           "rule": [//记录输出点位以及具体规则判断
+         "config": { // function-switch node, used for conditions
+           "rule": [ // output handles and rule conditions
              {
-               "name": "out001",//输出点位的名称，与wires中的输出点位对应
-               "rule": [//具体的规则
+               "name": "out001", // output handle name, matches wires
+               "rule": [ // rules
                  {
-                   "operator": "<=",//操作符
-                   "type": "variable",//记录的类型参数，此时只有一条规则
-                   "value": 5,//数值
-                   "variables": "X1"//比较的值的名称，与variables中所给予的名称相同
+                   "operator": "<=", // operator
+                   "type": "variable", // type for this rule
+                   "value": 5, // value
+                   "variables": "X1" // variable name, matches the variables definition
                  }
                ],
-               "type": "default"//保留字段
+               "type": "default" // reserved
              },
              {
                "name": "out002",
@@ -1116,8 +1137,8 @@ outline: deep
                    "value": 49
                  },
                  {
-                   "type": "relation",//记录的类型参数，为relation说明这是一个连接符号，以此处理多个判断规则
-                   "value": "And"//连接的符号为And
+                   "type": "relation", // relation operator to combine rules
+                   "value": "And" // logical operator
                  },
                  {
                    "type": "variable",
@@ -1140,20 +1161,20 @@ outline: deep
                ]
              }
            ],
-           "variables": [//所需要参数定义
+           "variables": [ // parameter definitions
              {
-               "instance_id": 1,//点位所属实例的id
-               "instance_name": "battery_01",//点位所属实例的名称
-               "name": "X1",//默认给予名称，用于在节点规则中配置，规则为"X+num"
-               "pointType": "measurement",//点位的类型
-               "point_name": "SOC",//点位的名称
-               "type": "single",//参数定义的类型，分为single和combined
-               "unit": "%",//点位的单位
-               "point_id": 3,//点位的id
-               "formula": []//当参数定义类型为combined的时候，记录组合类参数定义的形式
+               "instance_id": 1, // instance id for the point
+               "instance_name": "battery_01", // instance name for the point
+               "name": "X1", // default name used in rules
+               "pointType": "measurement", // point type
+               "point_name": "SOC", // point name
+               "type": "single", // parameter type: single or combined
+               "unit": "%", // unit
+               "point_id": 3, // point id
+               "formula": [] // when combined, records formula definition
              }
            ],
-           "wires": {//对于“function-switch”功能卡片，其会有多个接口，此处记录了每个输出节点所对应的下一个点位的id。
+           "wires": { // for function-switch, multiple outputs map to next node ids
              "out001": [
                "node-1766627111063"
              ],
@@ -1182,10 +1203,10 @@ outline: deep
        "data": {
          "cardId": "action-1",
          "config": {
-           "rule": [//规则配置
+           "rule": [ // rule config
              {
-               "Variables": "X1",//定义的参数值
-               "value": 42290//赋予的值（如果是数字则是具体的数值，如果是字符串，则赋予对应参数的值）
+               "Variables": "X1", // defined variable
+               "value": 42290 // assigned value
              },
              {
                "Variables": "X2",
@@ -1225,7 +1246,7 @@ outline: deep
          "description": "The SOC is too low.",
          "id": "node-1766627111063",
          "label": "SOC low",
-         "type": "action-changeValue",//该类型的节点可以用来执行某些action或者修改点位的值。
+         "type": "action-changeValue", // this node type can execute actions or change point values
          "status": ""
        }
      },
@@ -1342,76 +1363,76 @@ outline: deep
    ]
     },
     "format": "vue-flow",
-    "id": "1",//规则id
-    "name": "SOC Monitoring",//规则名称
-    "priority": 10//优先级
+    "id": "1", // rule id
+    "name": "SOC Monitoring", // rule name
+    "priority": 10 // priority
   }
   ```
 
-5. 点击**FullScreen**按钮，进入全屏模式。
+5. Click **FullScreen** to enter full-screen mode.
 
-6. 点击**Exit Fullscreen**按钮，退出全屏模式。
+6. Click **Exit Fullscreen** to exit.
 
-##### 修改规则链路
+##### Edit Rule Flow
 
-![11](../public/images/Setting/Configuration/rule/11.png)
+![11](/images/Setting/Configuration/rule/11.png)
 
-![12](../public/images/Setting/Configuration/rule/12.png)
+![12](/images/Setting/Configuration/rule/12.png)
 
-1. 点击**Edit**按钮进行到规则链的编辑模式。
+1. Click **Edit** to enter rule flow edit mode.
 
-2. 此处为自定义的功能卡片，可以使用鼠标点击所需要的卡片进行拖拽，从而放置到规则链的画布中。不同的卡片具有不同的功能：
+2. The cards below are custom function cards. Drag the required card onto the rule flow canvas. Different cards have different functions:
 
-     - **Switch Function——数值判断卡片**
-       ![13](../public/images/Setting/Configuration/rule/13.png)
-       该卡片主要用于对实例的点位数据的值是否满足某一条件进行判断。
-     - **Change Value——数据修改卡片**
-       ![14](../public/images/Setting/Configuration/rule/14.png)
-       该卡片主要用来修改某一实例的点位数据。
+     - **Switch Function - Value condition card**
+       ![13](/images/Setting/Configuration/rule/13.png)
+       This card is used to judge whether a point value meets a condition.
+     - **Change Value - Data modification card**
+       ![14](/images/Setting/Configuration/rule/14.png)
+       This card is used to modify a point value for an instance.
 
-3. 此处为规则链的画布，可以在此处进行卡片的配置、连线。基础操作如下：
+3. The rule flow canvas is where you configure cards and connections. Basic operations:
 
-     - 画布中必须要有**Start**卡片和**End**卡片的存在，**规则链必须从Start卡片开始，以End卡片结束**。
-     - 卡片的左侧的点位为输入点位，只能作为连线的终点；卡片的右侧的点位为输出点位，只能作为连线的起点。
-     - 需要进行删除操作的时候，单击卡片或者线段，再点击键盘中的”Backspace“键进行删除**（start卡片和end卡片是不能够删除的）**。
-     - 双击卡片进行卡片内部的参数配置，不同的卡片类型所编辑的数据不同：
-       - **Switch Function——数值判断卡片**
-         ![15](../public/images/Setting/Configuration/rule/15.png)
+     - The canvas must include **Start** and **End** cards. **The rule flow must start with Start and end with End.**
+     - The left handles on a card are inputs and can only be line endpoints; the right handles are outputs and can only be line starting points.
+     - To delete, click a card or line and press **Backspace**. **Start and End cards cannot be deleted.**
+     - Double-click a card to configure its parameters. Different card types have different data to edit:
+       - **Switch Function - Value condition card**
+         ![15](/images/Setting/Configuration/rule/15.png)
        
-         1. 第一部分为基础信息区域，主要是卡片展示的信息：**label**为卡片的标题信息，**description**为卡片的描述信息。
-         2. 第二部分为参数定义区域，在此处进行参数的声明：
-             ![16](../public/images/Setting/Configuration/rule/16.png)
-             点击添加按钮，可以进行参数定义的新增，每个参数给予的名称为**X+自增序列号**。
-             点击每个参数对应的删除图标按钮，可以删除该的参数。
-             参数声明有两种类型：**single**和**combined**类型，其规则如下：
+         1. The first section is basic info: **label** is the card title, and **description** is the card description.
+         2. The second section is parameter definition, where you declare parameters:
+             ![16](/images/Setting/Configuration/rule/16.png)
+             Click the add button to create a parameter. Each parameter is named **X + auto-increment number**.
+             Click the delete icon next to a parameter to remove it.
+             Parameter definitions have two types: **single** and **combined**:
 
-           * **single**类型为单一参数定义。用户只需要依次选择实例名称、点位类型、点位名称即可。
-             ![17](../public/images/Setting/Configuration/rule/17.png)
+           * **single**: a single parameter. Select instance name, point type, and point name.
+             ![17](/images/Setting/Configuration/rule/17.png)
        
-           * **combined**类型为组合式参数定义。用户可以选择已经定义的参数或者手动输入数字进行组合式计算，支持选择运算符：`+、-、*、/`。用户点击下方的**绿色新增图标**按钮可以增加一行数据运算参数，点击对应运算数据右侧的**红色删除图标**按钮，可以删除这一行数据。
-             ![18](../public/images/Setting/Configuration/rule/18.png)
-         3. 第三部分判断规则定义区域，在此处进行规则的声明：
-             ![19](../public/images/Setting/Configuration/rule/19.png)
-             点击**橙色新增图标**按钮新增规则，每次新增的规则的给予的名称为**out+自增列号**。
-             点击每个规则对应的**删除图标**按钮删除该规则。
-             ![20](../public/images/Setting/Configuration/rule/20.png)
-             根据在参数定义中的参数名称，用户在此处可以选择已经定义的参数与其他参数或者数值进行比较。用户可以点击绿色新增按钮，添加额外一行规则判断，并进行组合式判断（目前两个判断之间只允许And判断，及两者都满足)，用户可以点击对应规则后面的红色删除按钮，对这一行规则判断进行删除。
+           * **combined**: a composite parameter. You can select existing parameters or enter numbers and combine them with operators `+`, `-`, `*`, `/`. Click the **green add icon** to add a calculation row, and click the **red delete icon** to remove a row.
+             ![18](/images/Setting/Configuration/rule/18.png)
+         3. The third section is rule definition, where you define conditions:
+             ![19](/images/Setting/Configuration/rule/19.png)
+             Click the **orange add icon** to add a rule. Each rule is named **out + auto-increment number**.
+             Click the **delete icon** next to a rule to remove it.
+             ![20](/images/Setting/Configuration/rule/20.png)
+             Based on parameter names defined above, you can compare parameters to other parameters or values. Click the green add icon to add an extra condition line and combine conditions (currently only **And** is supported, meaning both must be satisfied). Click the red delete button on a condition line to remove it.
 
-           > 注意：每一个完整的**out+xxx**的规则都会在节点卡片上生成一个对应的点位，只有满足判断条件的时候，才会执行这个点位连通的下一节点。
-           > ![21](../public/images/Setting/Configuration/rule/21.png)
-       - **Change Value——数据修改卡片**
-         ![22](../public/images/Setting/Configuration/rule/22.png)
+           > Note: Each complete **out+xxx** rule generates a corresponding output handle on the node card. Only when the condition is satisfied will the flow proceed to the next node connected to that handle.
+           > ![21](/images/Setting/Configuration/rule/21.png)
+       - **Change Value - Data modification card**
+         ![22](/images/Setting/Configuration/rule/22.png)
          
-         1. 第一部分为基础信息区域，主要是卡片展示的信息：**label**为卡片的标题信息，**description**为卡片的描述信息。
-         2. 第二部分为参数定义区域，在此处进行参数的声明，其声明方式同**Switch Function**中的声明方式。
-         3. 第三部分为修改规则定义区域，在此处进行实例点位参数的修改。
-             ![23](../public/images/Setting/Configuration/rule/23.png)
-             点击**橙色新增图标**按钮，新增参数修改规则。
-             点击每个修改规则对应的**删除图标**按钮，删除该规则。
-             对于参数的设置分为左右两个参数。整体逻辑是要把左侧的参数修改为右侧的数值或者参数。左侧的选择框只能选择**single**类型的参数；右侧的选择框可以选择任意已经定义的参数或者自定义数值。
-4. 画布控件，从上到下依次为：放大画布按钮、缩小画布按钮、规则链自适应画布大小按钮、禁止/允许画布操作按钮。
-5. 规则链保存按钮。当进行点位/线段的增加、修改、删除操作时才允许进行保存。
-6. 规则链取消按钮。当进行点位/线段的增加、修改、删除操作时才允许进行取消，其会将规则链恢复到未保存之前的样子。
-7. **Fullscreen**按钮，点击打开全屏编辑状态。
-8. **Import**按钮，点击后可以选择.json文件进行规则链的导入操作，**对.json文件的格式要求同导出的.json文件格式**。
-9. **Cancel Edit**按钮，点击后退出编辑状态。
+         1. The first section is basic info: **label** is the card title, and **description** is the card description.
+         2. The second section is parameter definition, the same as in **Switch Function**.
+         3. The third section is change-rule definition, where you modify instance point parameters.
+             ![23](/images/Setting/Configuration/rule/23.png)
+             Click the **orange add icon** to add a change rule.
+             Click the **delete icon** next to a rule to remove it.
+             The modification rule uses left and right parameters: the left side is the target parameter to change; the right side is the new value or parameter. The left selector can only choose **single** parameters; the right selector can choose any defined parameter or a custom value.
+4. Canvas controls from top to bottom: zoom in, zoom out, fit to canvas, disable/enable canvas interactions.
+5. Rule flow save button. Save is enabled only when nodes/edges are added, modified, or deleted.
+6. Rule flow cancel button. Cancel is enabled only when nodes/edges are added, modified, or deleted; it restores the last saved state.
+7. **Fullscreen** button to enter full-screen edit mode.
+8. **Import** button. Select a .json file to import a rule flow; **the .json format must match the exported format**.
+9. **Cancel Edit** button to exit edit mode.

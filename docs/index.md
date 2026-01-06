@@ -3,18 +3,20 @@
 layout: home
 
 hero:
-  name: "Monarch Edge 用户手册"
+  name: "Monarch Edge Manual"
   text: ""
-  tagline: 覆盖普通用户与系统管理员的完整操作指南，聚焦监控、告警、控制与统计分析。
+  tagline: An on-site edge monitoring and control platform for real-time telemetry, industrial connectivity, device modeling, and alarm-driven operations
   actions: []
 
 features:
-  - title: 站点总览与能量流向
-    details: 聚合站点健康度、能量分布与功率趋势，快速掌握运行状态。
-  - title: 设备类型化视图
-    details: 按 PV、储能、柴油机、电表等设备类型组织数据，快速定位关键指标。
-  - title: 告警与控制闭环
-    details: 实时告警联动控制策略，减少人工干预与误操作风险。
-  - title: 统计与能效追踪
-    details: 日/月/年维度统计报表，帮助定位异常与优化运行成本。
+  - title: Real-time data & operational visibility
+    details: Provides real-time telemetry and status views across the site and devices for rapid health assessment and trend awareness.
+  - title: Industrial connectivity & configuration
+    details: Enables multi-protocol connectivity with centralized communication configuration, plus link monitoring and diagnostics for commissioning and troubleshooting.
+  - title: Device model mapping & consistency checks
+    details: Supports hierarchical modeling and point mapping, with alignment/consistency validation against upstream or cloud models to keep semantics consistent.
+  - title: Local control & alarm response loop
+    details: Offers local control entry points and alarm management to drive a closed-loop workflow from detection to on-site action.
 ---
+
+

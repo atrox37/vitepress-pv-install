@@ -1,61 +1,61 @@
----
+﻿---
 outline: deep
 ---
 
-# 实例管理
+# Instance Management
 
-## 查询设备实例
+## Query Device Instances
 
-![2](../../../public/images/Setting/Configuration/deviceInstance/2.png)
+![2](/images/Setting/Configuration/deviceInstance/2.png)
 
-1. 支持对实例进行筛选。筛选条件有：
-- `Product_Name`：实例所属的产品名称。
-2. 点击**Search**按钮，进行筛选搜索。
-3. 点击**Reload**按钮，进行搜索重置。
+1. You can filter instances by:
+- `Product_Name`: The product name of the instance.
+2. Click **Search** to filter.
+3. Click **Reload** to reset.
 
-## 新增设备实例
+## Add a Device Instance
 
-![3](../../../public/images/Setting/Configuration/deviceInstance/3.png)
+![3](/images/Setting/Configuration/deviceInstance/3.png)
 
-![4](../../../public/images/Setting/Configuration/deviceInstance/4.png)
+![4](/images/Setting/Configuration/deviceInstance/4.png)
 
-1. 点击New Instance按钮，打开新增实例弹框。
+1. Click **New Instance** to open the add dialog.
 
-2. 填入正确的参数，字段详情参考基础概念实例的字段介绍。
-3. 点击属性添加图标按钮，可以添加一条属性值。
-4. 点击属性删除图标按钮，可以删除对应的属性值。
-5. 点击Submit按钮，提交新增的实例。
-6. 点击Cancel按钮，取消新增。
+2. Enter the required parameters. Refer to the instance field definitions in the basic concepts.
+3. Click the add property icon to add a property value.
+4. Click the delete property icon to remove a property value.
+5. Click **Submit** to create the instance.
+6. Click **Cancel** to cancel.
 
-## 查看设备实例详情
+## View Device Instance Details
 
-![5](../../../public/images/Setting/Configuration/deviceInstance/5.png)
+![5](/images/Setting/Configuration/deviceInstance/5.png)
 
-![6](../../../public/images/Setting/Configuration/deviceInstance/6.png)
+![6](/images/Setting/Configuration/deviceInstance/6.png)
 
-1. 点击所要查看的实例Operation列中的Detail按钮，打开实例详情弹框。
+1. Click **Detail** in the **Operation** column to open the instance details dialog.
 
-## 编辑设备实例
+## Edit Device Instances
 
-![7](../../../public/images/Setting/Configuration/deviceInstance/7.png)
+![7](/images/Setting/Configuration/deviceInstance/7.png)
 
-![8](../../../public/images/Setting/Configuration/deviceInstance/8.png)
+![8](/images/Setting/Configuration/deviceInstance/8.png)
 
-1. 在查看实例详情的弹框中，点击**Edit**按钮进入实例信息的编辑模式。
+1. In the instance details dialog, click **Edit** to enter edit mode.
 
-2. 在修改中，除去`Product Name`无法进行修改，其余修改与新增中一致。
-3. 点击**Submit**按钮进行修改提交。
-4. 点击**Cancel Edit**按钮取消编辑。
+2. During editing, `Product Name` cannot be changed; other fields are the same as in add.
+3. Click **Submit** to save changes.
+4. Click **Cancel Edit** to cancel.
 
-## 删除已有的设备实例
+## Delete Device Instances
 
-![9](../../../public/images/common/9.png)
+![9](/images/common/9.png)
 
 
 
-![10](../../../public/images/Setting/Configuration/deviceInstance/10.png)
+![10](/images/Setting/Configuration/deviceInstance/10.png)
 
-1. 点击想要删除的设备实例行中**Operation**列的**Delete**按钮进行删除。
+1. Click **Delete** in the **Operation** column for the target device instance row.
 
-2. 点击**Confirm**按钮确认删除。
-3. 点击Cancel按钮取消删除。
+2. Click **Confirm** to delete.
+3. Click **Cancel** to cancel.

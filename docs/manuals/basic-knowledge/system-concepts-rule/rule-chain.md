@@ -1,14 +1,14 @@
----
+﻿---
 outline: deep
 ---
 
-# 规则链路
+# Rule Chain
 
-## 概念定义
+## Definition
 
- 规则链路是规则内部的可视化执行流程，用“节点 + 连线”的方式描述规则从开始到结束的完整执行路径。它将规则拆分为多个步骤（如开始、条件判断、动作执行、结束），并通过分支结构表达不同条件下的不同处理路径。
-## 作用
+A rule flow is the visual execution flow inside a rule. It uses "nodes + links" to describe the full execution path of a rule from start to finish. It breaks a rule into steps (such as start, condition, action, end) and uses branching to express different paths under different conditions.
+## Role
 
-- 清晰表达复杂逻辑：把多条件、多分支、多动作的策略以流程图方式呈现，降低理解和配置成本。
-- 可追踪与可诊断：运行时可定位实际执行路径与关键节点数据，帮助快速排查“为何这样执行”。
-- 易维护与易迭代：通过图形化结构快速调整策略步骤与分支关系，支持版本化管理以及导入/导出复用。
+- Clearly express complex logic: Present multi-condition, multi-branch, multi-action strategies as flowcharts, reducing understanding and configuration costs.
+- Traceable and diagnosable: During runtime, the actual execution path and key node data can be located to quickly identify why a decision was made.
+- Easy to maintain and iterate: Quickly adjust steps and branches with a graphical structure, with versioning and import/export reuse.

@@ -1,18 +1,17 @@
----
+﻿---
 outline: deep
 ---
 
 # Current Records
 
-## 表格字段介绍
+## Table Fields
 
-- Name：规则/告警名称
-- Channel ID：通道 ID
-- Level：告警等级图标
-- Start Time：触发时间
+- Name: Rule/Alarm name
+- Channel ID: Channel ID
+- Level: Alarm level icon
+- Start Time: Trigger time
 
-## 筛选操作
+## Filter
 
-用户可以对右上角的选择框进行告警等级的选择，以对当前告警记录进行筛选。
-
+Users can select the alarm level from the dropdown in the upper-right corner to filter current alarm records.
 

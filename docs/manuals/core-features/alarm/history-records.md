@@ -1,29 +1,28 @@
----
+﻿---
 outline: deep
 ---
 
 # History Records
 
-## 表格字段介绍
+## Table Fields
 
-- Name：规则/告警名称
-- Channel ID：通道 ID
-- Level：告警等级图标
-- Start Time：告警触发时间
-- End Time：告警处理结束时间
+- Name: Rule/Alarm name
+- Channel ID: Channel ID
+- Level: Alarm level icon
+- Start Time: Alarm trigger time
+- End Time: Alarm handling end time
 
-## 筛选操作
+## Filter
 
-用户可以通过以下筛选条件进行筛选：
+Users can filter by the following conditions:
 
-- Warning Level：L1/L2/L3
-- Start Time：开始时间
-- End Time：结束时间
+- Warning Level: L1/L2/L3
+- Start Time: Start time
+- End Time: End time
 
-用户点击 Search 按钮，可以针对筛选的条件进行搜索；点击 Reload 按钮，重置所有的筛选条件并搜索。
+Click **Search** to search by the selected conditions. Click **Reload** to reset all filters and search again.
 
-## 列表信息导出
+## Export
 
-用户点击 Export 按钮可以导出历史告警的 Excel 文件。
-
+Click **Export** to export the historical alarms to an Excel file.
 

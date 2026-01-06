@@ -1,103 +1,99 @@
----
+﻿---
 outline: deep
 ---
 
-# 四遥
+# Four Remote Types
 
-## 概念定义
+## Definition
 
-在工业自动化、电力系统以及物联网设备管理中，业务数据通常按“四遥”分类进行组织与管理。“四遥”是 SCADA（监控与数据采集系统）的经典数据模型，被广泛应用于 IIoT 平台、电力自动化、水务、暖通、能源管理系统等领域。
-四遥分类用于明确“点位的性质与用途”，帮助用户理解每一个点位表示什么、能做什么、如何被采集或下发。
-## 遥测
- ###### 概念定义
+In industrial automation, power systems, and IoT device management, business data is typically organized and managed by the "four remote" categories. The four-remote model is a classic SCADA data model and is widely used in IIoT platforms, power automation, water, HVAC, energy management systems, and more.
+The classification clarifies the "nature and purpose of points," helping users understand what each point represents, what it can do, and how it is collected or issued.
 
-遥测指设备上传的连续量、模拟量、可度量的实时数值。
- 一般以数值类型呈现（整数或浮点数）。
-### 常见示例
+## category
 
-- 温度（℃）
-- 湿度（%RH）
-- 电压（V）、电流（A）
-- 功率（kW）、功率因数
-- 压力（kPa）、液位（%）
-- 流量、风速、转速
-- 能耗读数（电、气、水等）
+### Telemetry
 
-### 特点
+Telemetry refers to continuous, analog, and measurable real-time values reported by devices.
+It is generally represented by numeric values (integer or float).
+#### Common Examples
 
-- 多为读操作；
-- 数值会随设备运行实时变化；
-- 通常需要配置采集周期。
-   在平台中的使用
-   遥测点用于趋势分析、报表统计、能耗监测、运行优化等业务场景。
+- Temperature (C)
+- Humidity (%RH)
+- Voltage (V), Current (A)
+- Power (kW), Power factor
+- Pressure (kPa), Level (%)
+- Flow, Wind speed, RPM
+- Energy readings (electricity, gas, water, etc.)
 
-## 遥信
+#### Characteristics
 
-### 概念定义
-
-遥信指设备状态、开关量、枚举量等离散状态信息。
-一般仅有两种状态（0/1），也可能扩展为少量枚举值。
-### 常见示例
-
-- 运行/停止
-- 合闸/分闸
-- 启动/未启动
-- 报警/正常
-- 故障/正常
-- 门开/关
-- 某继电器吸合/释放
-
-### 特点
-
-- 多为读操作；
-- 适用于监控设备状态；
-- 变化事件可触发告警。
-  在平台中的使用
-  遥信点广泛用于报警管理、事件监测、状态记录等场景。
-
-## 遥控
- ###### 概念定义
-
-遥控指平台向设备下发的动作命令，用于改变设备的运行状态。
-属于“写操作”。
-### 常见示例
-
-- 启动/停止设备
-- 打开/关闭阀门
-- 合闸/分闸
-- 启动排风、排水、加热设备
-- 重启控制器
-- 切换模式
-
-### 特点
-
-- 需要具备权限控制；
-- 常要求二次确认或安全校验；
-- 多为开关型命令（0/1）。
-  在平台中的使用
-  遥控适用于智能化操作、远程管理、自动化控制策略执行等场景。
-
+- Mostly read operations;
+- Values change in real time with device operation;
+- Collection intervals typically need to be configured.
+   Usage in the platform
+   Telemetry points are used for trend analysis, reporting, energy monitoring, and operational optimization.
 ---
-## 遥调
+### Signal
 
-### 概念定义
+Signals are discrete status information such as device state, switch status, or enumeration values.
+Typically there are only two states (0/1), though some may extend to a small number of enumerations.
+#### Common Examples
 
-遥调是远程参数调整，用于对设备运行参数进行设定。
- 同样属于“写操作”，但与遥控不同，遥调作用于设备内部的“设定值”。
+- Running/Stopped
+- Close/Open
+- Started/Not started
+- Alarm/Normal
+- Fault/Normal
+- Door Open/Closed
+- Relay Energized/Released
 
-### 常见示例
+#### Characteristics
 
-- 温度设定值
-- 压力上限/下限设定
-- 频率设定（Hz）
-- 电压、电流保护阈值
-- 费率参数（电表）
-- PID 控制参数（P/I/D）
+- Mostly read operations;
+- Used for monitoring device status;
+- Change events can trigger alarms.
+  Usage in the platform
+  Signal points are widely used in alarm management, event monitoring, and status recording.
+---
+### Control
 
-### 特点
+Control refers to action commands issued by the platform to change device operating status.
+This is a write operation.
+#### Common Examples
 
-- 参数型写操作，而非开关动作；
-- 对设备运行性能影响较大；
-- 通常需要校验范围与类型。
-  在平台中的使用
-  遥调常与自动化控制策略结合，用于调节环境、优化能源效率等。
+- Start/stop equipment
+- Open/close valves
+- Close/open breakers
+- Start ventilation, drainage, heating equipment
+- Reboot controllers
+- Switch modes
+
+#### Characteristics
+
+- Requires permission control;
+- Often requires secondary confirmation or safety checks;
+- Mostly switch-type commands (0/1).
+  Usage in the platform
+  Control is used for intelligent operations, remote management, and automated control strategy execution.
+---
+### Adjustment
+
+Adjustment is remote parameter tuning used to set device operating parameters.
+It is also a write operation, but unlike Control, Adjustment acts on internal "setpoints".
+
+#### Common Examples
+
+- Temperature setpoint
+- Pressure upper/lower limits
+- Frequency setpoint (Hz)
+- Voltage/current protection thresholds
+- Tariff parameters (meters)
+- PID control parameters (P/I/D)
+
+#### Characteristics
+
+- Parameter-type writes rather than switch actions;
+- Greater impact on device performance;
+- Typically requires range and type validation.
+  Usage in the platform
+  Adjustment is often combined with automation strategies to regulate environments and improve energy efficiency.

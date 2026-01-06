@@ -1,28 +1,28 @@
----
+﻿---
 outline: deep
 ---
 
-# 实例点位路由
+# Instance Point Routing
 
-## 概念定义
+## Definition
 
-实例点位映射就是把平台里的“实例点位”绑定到现场的“通道点位/点号”的配置关系，它回答一个关键问题：
-**这个实例的这个点位，对应现场哪条通道、哪个点号？属于四遥中的哪一类？**
+Instance point mapping binds platform "instance points" to on-site "channel points/addresses." It answers the following key questions for each instance point:
+**Which channel and point on-site does it map to? Which of the four remote types does it belong to?**
 
-* 对于 **measurement** 点位，其对应的通道点位的类型只能是 **Telemetry** 和 **Signal**。
-* 对于 **action** 点位，其对应的通道点位的类型只能是 **Control** 和 **Adjustment**。
-* **property** 点位作为固有属性，没有路由信息。
+* For **measurement** points, the channel point type can only be **Telemetry** or **Signal**.
+* For **action** points, the channel point type can only be **Control** or **Adjustment**.
+* **property** points are intrinsic attributes and have no routing info.
 
-## 字段解释
+## Field Description
 
-* `point_id`：对应实例点位的id。
-* `name`：对应点位的名称。
-* `channel_id`：点位对应路由的通道的id。
-* `channel_type`：点位对应路由的通道的四遥类型。
-* `channel_point_id`：点位对应路由的通道点位id。
+* `point_id`: ID of the instance point.
+* `name`: Name of the point.
+* `channel_id`: ID of the channel used by the route.
+* `channel_type`: Four-remote type of the channel point.
+* `channel_point_id`: Channel point ID used by the route.
 
-## 作用
+## Role
 
-- 数据上行（采集）。通道采到的数据按映射路由到对应的 measurement 点位。
-- 指令下行（控制）。对 action 点位写入的值按映射路由到对应的通道点号下发给设备。
-- 解耦业务与协议。业务侧只关心点位语义；通信侧只关心地址点号；映射把两者连接起来，便于换协议/换网关/改点表。
+- Data uplink (acquisition): Channel data is routed to the corresponding measurement points.
+- Command downlink (control): Values written to action points are routed to the corresponding channel points and sent to devices.
+- Decouple business and protocol: Business logic focuses on point semantics; communication focuses on addresses; mapping connects them to allow protocol/gateway/point-table changes.

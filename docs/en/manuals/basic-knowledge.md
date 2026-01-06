@@ -1,5 +1,0 @@
-﻿---
-outline: deep
----
-
-# Basic Knowledge

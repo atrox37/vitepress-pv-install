@@ -1,9 +1,9 @@
----
+﻿---
 outline: deep
 ---
 
-# 通道概念
+# Channel Concepts
 
-## 基础概念
-在物联网系统中，终端设备、采集网关以及云平台之间需要通过各种通信方式实现数据采集、遥控指令下发、设备状态监测等功能。为了实现标准化的设备接入及数据管理，平台基于工业物联网（IIoT）与电力自动化（SCADA）领域的成熟经验，引入了**通道（Channel）、通道点位（Channel Point）、通讯协议（Protocol）、四遥类型（遥测/遥信/遥控/遥调）及 通道映射（Mapping）**等概念。
-这些概念构成了系统实现设备与云端间通信的基础逻辑，是理解设备接入流程、点位配置、数据格式和网关行为的重要参考。
+## Basic Concepts
+In an IoT system, terminal devices, data acquisition gateways, and cloud platforms need to communicate through various methods for data collection, remote control, and device status monitoring. To standardize device onboarding and data management, the platform draws on proven experience in Industrial IoT (IIoT) and power automation (SCADA) and introduces concepts such as **Channel, Channel Point, Protocol, Four Remote types (Telemetry/Signal/Control/Adjustment), and Mapping**.
+These concepts form the core logic for communication between devices and the cloud, and are key to understanding device onboarding, point configuration, data formats, and gateway behavior.

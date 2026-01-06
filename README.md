@@ -4,6 +4,40 @@
 
 EdgeEMS是一个基于Vue 3 + TypeScript的现代化边缘能源管理系统，采用Composition API和Element Plus UI组件库构建。
 
+## 文档站点（VitePress）与 PDF 导出
+
+本仓库同时包含一套 VitePress 用户手册站点（`docs/`），支持中英文切换，并支持导出为 PDF（**英文一本 + 中文一本**）。
+
+### 语言默认行为（重要）
+
+- **URL 固定规则**：
+  - 访问 `/`：**英文**（默认）
+  - 访问 `/cn/`：**中文**
+
+也就是说：不再依赖“自动跳转/记忆偏好”，语言完全由 URL 决定。
+
+### 导出 PDF（推荐）
+
+本方案会把 **整个 VitePress 站点**打印并合并为 PDF，改了任意 md 后无需手动维护 PDF，只要重新运行一次导出命令即可自动生成新版本。
+
+1) **首次执行需要安装 Playwright 浏览器**
+
+```bash
+pnpm exec playwright install chromium
+```
+
+2) **生成 PDF**
+
+```bash
+pnpm docs:pdf
+```
+
+生成文件位置：
+- `docs/public/downloads/en/monarch-edge-manual.pdf`
+- `docs/public/downloads/zh-cn/monarch-edge-manual.pdf`
+
+站点右上角导出按钮会根据当前语言下载对应 PDF。
+
 ## 技术栈
 
 - **前端框架**: Vue 3.4+

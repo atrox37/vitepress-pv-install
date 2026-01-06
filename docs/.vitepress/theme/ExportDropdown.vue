@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { inBrowser, withBase } from "vitepress";
+import { computed } from "vue";
+import { useData, withBase } from "vitepress";
 
 /**
  * 右上角「导出」按钮 + 下拉菜单：
@@ -11,58 +11,41 @@ import { inBrowser, withBase } from "vitepress";
  * 这样构建后会暴露为：/downloads/user-manual.pdf /downloads/admin-manual.pdf
  */
 
-const open = ref(false);
-const rootEl = ref<HTMLElement | null>(null);
+const { lang } = useData();
 
-const userManualHref = computed(() => withBase("/downloads/user-manual.pdf"));
-const adminManualHref = computed(() => withBase("/downloads/admin-manual.pdf"));
+const isEnglish = computed(() => (lang.value || "").toLowerCase().startsWith("en"));
 
-function toggle() {
-  open.value = !open.value;
-}
-
-function close() {
-  open.value = false;
-}
-
-function onKeydown(e: KeyboardEvent) {
-  if (e.key === "Escape") close();
-}
-
-function onDocumentPointerDown(e: Event) {
-  const target = e.target as Node | null;
-  if (!target) return;
-  if (!rootEl.value) return;
-  if (!open.value) return;
-  if (rootEl.value.contains(target)) return;
-  close();
-}
-
-onMounted(() => {
-  if (!inBrowser) return;
-  document.addEventListener("keydown", onKeydown);
-  // capture=true 可以更早拿到事件，避免某些组件 stopPropagation 导致无法关闭
-  document.addEventListener("pointerdown", onDocumentPointerDown, true);
+const ui = computed(() => {
+  if (isEnglish.value) {
+    return {
+      export: "Download PDF",
+    };
+  }
+  return {
+    export: "下载 PDF",
+  };
 });
 
-onBeforeUnmount(() => {
-  if (!inBrowser) return;
-  document.removeEventListener("keydown", onKeydown);
-  document.removeEventListener("pointerdown", onDocumentPointerDown, true);
-});
+function toHref(path: string) {
+  // Ensure spaces are valid in URLs (e.g. en PDFs).
+  return withBase(encodeURI(path));
+}
+
+const pdfHref = computed(() =>
+  isEnglish.value
+    ? toHref("/downloads/en/monarch-edge-manual.pdf")
+    : toHref("/downloads/zh-cn/monarch-edge-manual.pdf")
+);
+
+const pdfDownloadName = computed(() =>
+  isEnglish.value ? "Monarch Edge Manual.pdf" : "Monarch Edge 用户手册.pdf"
+);
 </script>
 
 <template>
-  <div class="mc-export" ref="rootEl">
-    <button
-      class="mc-export__btn"
-      type="button"
-      aria-haspopup="true"
-      :aria-expanded="open"
-      aria-label="导出"
-      @click="toggle"
-    >
-      <span class="mc-export__sr-only">导出</span>
+  <div class="mc-export">
+    <a class="mc-export__btn" :href="pdfHref" :download="pdfDownloadName" :aria-label="ui.export">
+      <span class="mc-export__sr-only">{{ ui.export }}</span>
       <svg
         class="mc-export__icon"
         viewBox="0 0 24 24"
@@ -75,40 +58,7 @@ onBeforeUnmount(() => {
           d="M12 3a1 1 0 0 1 1 1v8.586l2.293-2.293a1 1 0 1 1 1.414 1.414l-4.004 4.004a1 1 0 0 1-1.414 0l-4.004-4.004a1 1 0 1 1 1.414-1.414L11 12.586V4a1 1 0 0 1 1-1zm-7 14a1 1 0 0 1 1 1v1h12v-1a1 1 0 1 1 2 0v2a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1z"
         />
       </svg>
-      <svg
-        class="mc-export__chevron"
-        viewBox="0 0 24 24"
-        width="14"
-        height="14"
-        aria-hidden="true"
-      >
-        <path
-          fill="currentColor"
-          d="M7.41 8.59a1 1 0 0 1 1.41 0L12 11.76l3.18-3.17a1 1 0 1 1 1.41 1.41l-3.88 3.88a1 1 0 0 1-1.41 0L7.41 10a1 1 0 0 1 0-1.41z"
-        />
-      </svg>
-    </button>
-
-    <div v-show="open" class="mc-export__menu" role="menu" aria-label="导出菜单">
-      <a
-        class="mc-export__item"
-        role="menuitem"
-        :href="userManualHref"
-        download="普通用户手册.pdf"
-        @click="close"
-      >
-        用户文档
-      </a>
-      <a
-        class="mc-export__item"
-        role="menuitem"
-        :href="adminManualHref"
-        download="系统用户手册.pdf"
-        @click="close"
-      >
-        管理员文档
-      </a>
-    </div>
+    </a>
   </div>
 </template>
 
@@ -119,10 +69,25 @@ onBeforeUnmount(() => {
   align-items: center;
 }
 
+.mc-export::before {
+  margin-right: 8px;
+  margin-left: 8px;
+  width: 1px;
+  height: 24px;
+  background-color: var(--vp-c-divider);
+  content: "";
+}
+@media (max-width: 959px) {
+  .mc-export::before {
+    display: none;
+  }
+  .mc-export__btn {
+    padding: 0 !important;
+  }
+}
 .mc-export__btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
   padding: 0 12px;
   height: var(--vp-nav-height);
   border: 0;
@@ -133,6 +98,7 @@ onBeforeUnmount(() => {
   line-height: 1;
   cursor: pointer;
   transition: color 0.25s;
+  text-decoration: none;
 }
 
 .mc-export__sr-only {
@@ -151,47 +117,8 @@ onBeforeUnmount(() => {
   display: block;
 }
 
-.mc-export__chevron {
-  display: block;
-  opacity: 0.75;
-}
-
 .mc-export__btn:hover {
   color: var(--vp-c-text-2);
-}
-
-.mc-export__btn:active {
-  transform: translateY(0.5px);
-}
-
-.mc-export__menu {
-  position: absolute;
-  /* Align with VitePress flyouts */
-  top: calc(var(--vp-nav-height) / 2 + 20px);
-  right: 0;
-  min-width: 168px;
-  padding: 6px;
-  border-radius: 12px;
-  border: 1px solid var(--vp-c-divider);
-  background: var(--vp-c-bg);
-  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.12);
-  z-index: 50;
-}
-
-.mc-export__item {
-  display: flex;
-  align-items: center;
-  height: 34px;
-  padding: 0 10px;
-  border-radius: 10px;
-  color: var(--vp-c-text-1);
-  text-decoration: none;
-  font-size: 13px;
-}
-
-.mc-export__item:hover {
-  background: var(--vp-c-accent-soft);
-  color: var(--vp-c-brand-1);
 }
 
 /* Desktop top-right:
@@ -211,28 +138,29 @@ onBeforeUnmount(() => {
   transition: color 0.25s;
 }
 
-/* Mobile nav screen: menu is not near the top bar, so use static layout */
+/* Mobile nav screen */
 :global(.VPNavScreen) .mc-export {
   width: 100%;
+  display: flex !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 :global(.VPNavScreen) .mc-export__btn {
   width: 100%;
   justify-content: space-between;
   height: 32px;
-  padding: 0;
+  padding: 0 !important;
+  margin: 0 !important;
   border-left: 0;
-}
-
-:global(.VPNavScreen) .mc-export__menu {
-  position: static;
-  margin-top: 10px;
-  width: 100%;
-  box-shadow: none;
 }
 
 :global(.VPNavScreen) .mc-export {
   margin-right: 0;
+}
+
+:global(.VPNavScreen) .mc-export::before {
+  display: none;
 }
 </style>
 

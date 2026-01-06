@@ -1,67 +1,67 @@
----
+﻿---
 outline: deep
 ---
 
-# 通道
+# Channel
 
-## 概念定义
-通道是设备（或网关)与平台之间建立通信所使用的**逻辑链路**，包含了完成数据读写所需的一整套必要配置信息。
-简单来说，通道定义了：
+## Definition
+A channel is the **logical link** used to establish communication between a device (or gateway) and the platform, and includes the complete configuration required for read/write operations.
+In simple terms, a channel defines:
 
-- 使用哪种协议与设备通信；
-- 如何连接设备；
-- 使用什么参数进行数据读写；
-- 如何保持通信和进行错误重试。
-通道是设备通信的基础，是所有点位读写操作的前提。
+- which protocol is used to communicate with the device;
+- how to connect to the device;
+- what parameters are used for read/write operations;
+- how to keep the connection alive and retry on errors.
+A channel is the foundation of device communication and a prerequisite for all point read/write operations.
 
-## 通道包含的配置项
-**Basic Information：**
+## Configuration Items
+**Basic Information:**
 
-  - `id`：通道的唯一标识。
-  - `name`：通道的名称。
-  - `description`：对通道的描述。
-  - `protocol`：通道所遵循的协议，目前有`modbus_tcp`、`modbus_rtu`、`di_do` 协议。
-  - `enabled`：通道是否可用。
+  - `id`: Unique identifier of the channel.
+  - `name`: Channel name.
+  - `description`: Channel description.
+  - `protocol`: Protocol used by the channel. Supported protocols include `modbus_tcp`, `modbus_rtu`, and `di_do`.
+  - `enabled`: Whether the channel is enabled.
 
-**Parameters**：
-根据 **protocol** 动态切换，常见参数说明：
+**Parameters**:
+Dynamically change based on **protocol**. Common parameters:
 
 - **modbus_tcp**
-    - `host`：主机地址（IP/域名）。
-    - `port`：端口（默认 502）。范围：1-65535。
-    - `connect_timeout_ms`：连接超时（正整数，毫秒）。
-    - `read_timeout_ms`：读取超时（正整数，毫秒）。
+    - `host`: Host address (IP/domain).
+    - `port`: Port (default 502). Range: 1-65535.
+    - `connect_timeout_ms`: Connection timeout (positive integer, milliseconds).
+    - `read_timeout_ms`: Read timeout (positive integer, milliseconds).
 - **modbus_rtu**
-    - `device`：串口设备路径（如 /dev/ttyS0、COM3）
-    - `baud_rate`：波特率（典型值：9600/19200/38400/115200）
-    - `data_bits`：数据位（常用 8）
-    - `stop_bits`：停止位（1 或 2）
-    - `parity`：校验位（N=无、E=偶校验、O=奇校验）
-    - `connect_timeout_ms`：连接超时（正整数，毫秒）
-    - `read_timeout_ms`：读取超时（正整数，毫秒）
-    - `retry_interval_ms`：读写失败后的重试间隔（正整数，毫秒）
+    - `device`: Serial device path (e.g., /dev/ttyS0, COM3)
+    - `baud_rate`: Baud rate (typical values: 9600/19200/38400/115200)
+    - `data_bits`: Data bits (commonly 8)
+    - `stop_bits`: Stop bits (1 or 2)
+    - `parity`: Parity (N=None, E=Even, O=Odd)
+    - `connect_timeout_ms`: Connection timeout (positive integer, milliseconds)
+    - `read_timeout_ms`: Read timeout (positive integer, milliseconds)
+    - `retry_interval_ms`: Retry interval after read/write failure (positive integer, milliseconds)
 
-**Running Status：**
+**Running Status:**
 
-- `connected`：通道是否连接（Connected/Disconnected）。
-- `running`：运行状态（Running/Stop）。
-- `last_update`：最后更新时间。
-- `error_count`：错误数量。
-- `last_error`：最后的错误信息。
+- `connected`: Whether the channel is connected (Connected/Disconnected).
+- `running`: Running status (Running/Stop).
+- `last_update`: Last update time.
+- `error_count`: Error count.
+- `last_error`: Last error message.
 
-**Point Counts：**
+**Point Counts:**
 
-- `telemetry`：遥测点位数量。
-- `signal`：遥信点位数量。
-- `control`：遥控点位数量。
-- `adjustment`：遥调点位数量。
+- `telemetry`: Telemetry point count.
+- `signal`: Signal point count.
+- `control`: Control point count.
+- `adjustment`: Adjustment point count.
 
-## 通道的作用
-通道与设备通信的全过程都离不开通道的作用，包括：
+## Role of Channels
+The entire communication process depends on channels, including:
 
-- 平台或网关如何建立连接（串口 / TCP / RTU / 以太网等）；
-- 如何从设备读取数据；
-- 如何向设备写入或下发指令；
-- 如何监控通信状态并进行异常处理。
-通俗理解为：
-通道 = 设备通信所需的“线路 + 协议 + 参数”。
+- how the platform or gateway establishes connections (serial / TCP / RTU / Ethernet);
+- how data is read from devices;
+- how data is written or commands are issued to devices;
+- how communication status is monitored and exceptions are handled.
+In plain terms:
+Channel = "link + protocol + parameters" required for device communication.

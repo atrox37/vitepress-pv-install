@@ -1,8 +1,8 @@
----
+﻿---
 outline: deep
 ---
 
-# 设备实例概念
+# Device Instance Concepts
 
-## 基础概念
-在微电网 EMS 中，为了标准化设备接入与点位管理，引入了产品、实例、实例点位与点位路由（映射）等基础概念：产品定义一类设备的标准能力与点位模型；实例是产品在现场的一台具体设备对象；实例点位用于表达该设备的配置与运行数据，按用途分为 **property（属性）/ measurement（测量）/ action（动作）**；实例映射（路由）则把实例点位绑定到现场通道点（并区分四遥类型 T/S/C/A），从而实现测量数据上送与控制/调节指令下发的准确对接。
+## Basic Concepts
+In microgrid EMS, to standardize device onboarding and point management, the platform introduces the basic concepts of products, instances, instance points, and instance routing (mapping): a product defines the standard capabilities and point model for a device type; an instance is a specific on-site device object for a product; instance points represent the device's configuration and runtime data and are classified as **property / measurement / action** by use; instance mapping (routing) binds instance points to on-site channel points (and to T/S/C/A types) to ensure accurate data reporting and control/adjustment issuance.

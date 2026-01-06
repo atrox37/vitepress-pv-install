@@ -1,27 +1,31 @@
----
+﻿---
 outline: deep
 ---
 
-# 常见问题（FAQ）与排障
+# FAQ and Troubleshooting
 
-1. 页面一直没有数据、设备 Update Time 不更新
-请按顺序自查：
-1. 刷新页面（F5）
-2. 切换到别的菜单再切回来
-3. 看顶部是否能正常跳转告警页（验证基础路由正常）
-4. 让管理员检查：
-  - 后端服务是否正常
-  - WebSocket 推送源是否正常
-  - 设备/通道是否在线
-建议你向管理员提供：
-- 发生问题的页面（例如：Devices > PV > Value Monitoring）
-- 当时的时间点
-- 是否所有设备都无数据，还是某一类无数据
----
-2. 登录后又被跳回登录页
-可能原因：
-- 账号已过期/密码错误
-- Token 刷新失败
-建议：
-- 重新登录一次
-- 仍失败请联系管理员重置账号
+## The page has no data and device Update Time does not change
+
+Please check in order:
+
+1. Refresh the page (F5)
+2. Switch to another menu and switch back
+3. Check whether the top bar can jump to the alarm page (verifies base routing)
+4. Ask the administrator to check:
+    - Whether the backend service is normal
+    - Whether the WebSocket push source is normal
+    - Whether devices/channels are online
+
+It is recommended to provide the administrator with:
+  - The page where the issue occurs (e.g., Devices > PV > Value Monitoring)
+  - The time the issue occurred
+  - Whether all devices have no data or only a specific type has no data
+
+## After logging in, you are redirected back to the login page
+
+Possible causes:
+  - Account expired or password incorrect
+  - Token refresh failed
+Suggestions:
+  - Log in again
+  - If it still fails, contact the administrator to reset the account

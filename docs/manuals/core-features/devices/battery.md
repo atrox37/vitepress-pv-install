@@ -1,42 +1,48 @@
----
+﻿---
 outline: deep
 ---
 
 # Battery
 
 ### Overview
-![1](../../../public/images/Devices/battery/1.png)
-该页面以卡片列表形式展示电池关键指标：
 
-- **Charge/Discharge Status**：电池充放电状态
-- **SoC**：电池电量百分比
-- **SoH**：电池健康度
-- **Voltage**：电池当前电压
-- **Current**：电池当前电流
-- **Power**：电池当前功率
-- **Max/Min/Avg Cell Voltage**：电池Cell的最大/最小/平均电压
-- **Cell Voltage Difference**：电池Cell最大电压差
-- **Avg Cell Temperature**：电池Cell平均温度
+![1](/images/Devices/battery/1.png)
+
+This page displays key battery indicators in a card list:
+
+- **Charge/Discharge Status**: Battery charge/discharge status
+- **SoC**: Battery state of charge
+- **SoH**: Battery health
+- **Voltage**: Current battery voltage
+- **Current**: Current battery current
+- **Power**: Current battery power
+- **Max/Min/Avg Cell Voltage**: Max/min/average cell voltage
+- **Cell Voltage Difference**: Maximum cell voltage difference
+- **Avg Cell Temperature**: Average cell temperature
 
 ### Value Monitoring
-![2](../../../public/images/Devices/battery/2.png)
-该页面包含 Tab：
 
-- **Battery**：电池
+![2](/images/Devices/battery/2.png)
 
-* **PCS**：储能变流器/功率变换系统
+This page includes tabs:
 
-每个 Tab 都是“**Update Time + 左右表格**”的形式，同**PV**的**Value Monitoring**页面。
+- **Battery**: Battery
+
+* **PCS**: Power conversion system
+
+Each tab uses the "**Update Time + left/right tables**" layout, the same as the **PV** **Value Monitoring** page.
 
 ### Battery Management
-![3](../../../public/images/Devices/battery/3.png)
-本页面主要监控所有**Battery Cell**的**Voltage**和**Temperature**的情况。
 
-- 左侧：显示所有Cell的电压情况
-  - 模块上方分别显示**最大Cell电压**和**最小Cell电压**。
-  - 模块下方以卡片形式列出 **#1~#N**（Battery Cell） 的电压值
-- 右侧：显示所有Cell的温度情况
-  - 模块上方分别显示**最大Cell温度**和**最小Cell温度**。
-  - 模块下方以卡片形式列出 **#1~#N** （Battery Cell）的温度值
+![3](/images/Devices/battery/3.png)
+
+This page mainly monitors **Voltage** and **Temperature** for all **Battery Cells**.
+
+- Left: Shows voltage for all cells
+  - The module header shows **maximum cell voltage** and **minimum cell voltage**.
+  - The module body lists **#1~#N** (Battery Cell) voltages as cards.
+- Right: Shows temperature for all cells
+  - The module header shows **maximum cell temperature** and **minimum cell temperature**.
+  - The module body lists **#1~#N** (Battery Cell) temperatures as cards.
 
 ---

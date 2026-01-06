@@ -1,19 +1,20 @@
----
+﻿---
 outline: deep
 ---
 
 # Overview
 
-页面内容
-该页以图表为主，通常包含：
+Page content
+This page is chart-based and typically includes:
 
-- Energy consumption（能耗概览卡片）
-- Energy Distribution（能源分布：环形图）
-- Power Trend（功率趋势：折线图）
-- Energy Chart（能量柱状图）
-常用操作
-- 切换时间范围：点击右侧时间按钮
+- Energy consumption (energy overview cards)
+- Energy Distribution (donut chart)
+- Power Trend (line chart)
+- Energy Chart (bar chart)
+Common actions
+- Switch time range: click the time buttons on the right
   - 6 Hour / 1 Day / 1 Week / 1 Month
-- 查看图表提示
-  - 鼠标移到图表上，可看到某时间点的值（tooltip）
-  【截图占位：Statistics Overview（时间按钮+图表区）】
+- View chart tips
+  - Hover over a chart to see values at a specific time point (tooltip)
+  [Screenshot placeholder: Statistics Overview (time buttons + chart area)]
+

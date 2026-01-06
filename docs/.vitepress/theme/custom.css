@@ -144,6 +144,68 @@ body {
   background-attachment: fixed;
 }
 
+/* Inline image row helper (keeps multiple images on one line) */
+.mc-img-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.mc-img-row > img {
+  flex: 1 1 0;
+  min-width: 0;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* Mobile nav screen: ensure it always fills the viewport */
+@media (max-width: 959px) {
+  /* Mobile nav screen (opened by hamburger): only apply when screen is open */
+  .VPNavBar.screen-open + #VPNavScreen {
+    display: block !important;
+    position: fixed !important;
+    top: calc(var(--vp-nav-height, 64px) + var(--vp-layout-top-height, 0px)) !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    height: calc(100vh - var(--vp-nav-height, 64px) - var(--vp-layout-top-height, 0px)) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    z-index: 9999 !important;
+    background-color: var(--vp-nav-screen-bg-color) !important;
+    pointer-events: auto !important;
+  }
+
+  /* <960px: hide export button in the top navbar (keep it inside the hamburger menu) */
+  .VPNavBar .mc-export {
+    display: none !important;
+  }
+}
+
+/* (ViewerJS styles removed; image preview now uses PhotoSwipe) */
+
+/* Print/PDF: hide navigation chrome to make exported PDF cleaner */
+@media print {
+  .VPNav,
+  .VPNavBar,
+  .VPSidebar,
+  .VPLocalNav,
+  .VPFooter,
+  .VPDocAside,
+  .VPDocFooter,
+  .VPBackdrop {
+    display: none !important;
+  }
+
+  .VPContent {
+    padding-top: 0 !important;
+  }
+
+  .vp-doc {
+    max-width: none !important;
+  }
+}
+
 .VPNavBarTitle .title {
   font-family: var(--vp-font-family-heading);
   letter-spacing: 0.2px;
@@ -158,7 +220,13 @@ body {
   right: 0;
   height: var(--vp-nav-height);
   width: 12px;
-  background: var(--vp-nav-bg-color);
+  /*
+   * NOTE:
+   * `--vp-nav-bg-color` is usually a solid color, but on the Home hero the navbar
+   * background is transparent over a gradient page background, which can make
+   * this mask look like a "white strip". Keep it transparent to avoid mismatch.
+   */
+  background: transparent;
   z-index: 1000;
   pointer-events: none;
 }
@@ -258,12 +326,15 @@ body {
 }
 
 .VPContent.is-home ::selection {
-  background: var(--mc-sub-soft-25);
-  color: var(--mc-sub-1);
+  /* Home selection should match doc behavior:
+   * - Light: theme (brand)
+   * - Dark:  sub-theme (accent)
+   */
+  background: var(--mc-theme-soft-25);
+  color: var(--mc-theme-1);
 }
 
 .dark .VPContent.is-home ::selection {
-  /* Home selection should match doc behavior: always use sub-theme color */
   background: var(--mc-sub-soft-25);
   color: var(--mc-sub-1);
 }

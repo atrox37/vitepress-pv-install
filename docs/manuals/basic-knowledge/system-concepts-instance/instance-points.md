@@ -1,41 +1,41 @@
----
+﻿---
 outline: deep
 ---
 
-# 实例点位
+# Instance Points
 
-## 概念定义
+## Definition
 
-实例点位是实例在平台中的“数据接口”，用于表达该实例可被配置、可被观测、可被控制的所有信息。
-实例点位分为以下三类：
+Instance points are the "data interfaces" of an instance in the platform, representing all information that can be configured, observed, and controlled.
+Instance points fall into three categories:
 
-- **property 点位**
-  用于描述设备“静态/半静态配置参数”，例如：额定功率、容量、通信地址、控制策略参数、告警阈值等。
-  作用：
-  - 作为实例的配置数据来源
-  - 用于策略计算、限值校验、展示与运维配置
-  - 通常不高频变化（可由人工配置/策略写入）
-- **measurement 点位**
-  表示设备“可被采集的状态/遥测/遥信”数据，如电压、电流、功率、SOC、开关状态、告警状态等。
-  作用：
-  - 实时监测与可视化
-  - 告警、联动、报表、优化调度的输入数据
-- **action 点位**
-  表示“可下发控制/调节”的点位，如启动/停机、合闸/分闸、有功/无功设定、充放电功率设定、模式切换等。
-  作用：
-  - EMS 控制闭环输出（策略/人工操作 → 下发到设备）
-  - 支持控制（Control）与调节（Adjustment）两类指令
+- **property points**
 
-## 字段解释
+  Describe "static/semi-static configuration parameters" such as rated power, capacity, communication address, control strategy parameters, alarm thresholds, etc.Its function is:
+  - Serve as the source of instance configuration data
+  - Used for strategy calculation, limit checks, display, and operations configuration
+  - Usually not high-frequency changes (can be set manually or by strategy)
+- **measurement points**
 
-* `point_id`：点位在其所在的点位分类中的唯一标识。
-* `name`：点位名称。
-* `value`：当前点位的值。
-* `unit`：点位的单位。
-* `description`：点位的备注信息。
+  Represent "observable status/telemetry/signal" data such as voltage, current, power, SOC, switch status, alarm status, etc.Its function is:
+  - Real-time monitoring and visualization
+  - Input data for alarms, linkage, reporting, and optimization dispatch
+- **action points**
 
-## 作用
+  Represent points that can be issued for control/adjustment, such as start/stop, close/open, active/reactive setpoints, charge/discharge power setpoints, mode switching, etc.Its function is:
+  - EMS control-loop output (strategy/manual operation -> device)
+  - Support both Control and Adjustment commands
 
-- 统一语义与数据治理。将不同协议、不同厂家的原始点号统一映射为一致的语义点位，便于上层应用理解与复用。
-- 作为监控与告警的基础颗粒度。趋势曲线、阈值告警、事件联动、报表统计都以点位为基本对象。
-- 作为控制闭环的输入/输出接口，策略读取 **measurement** 点位形成状态判断，向 **action** 点位写入目标值触发下发。
+## Field Description
+
+* `point_id`: Unique identifier within the point category.
+* `name`: Point name.
+* `value`: Current point value.
+* `unit`: Point unit.
+* `description`: Point description.
+
+## Role
+
+- Unify semantics and data governance: Map different protocols and vendor raw points into consistent semantic points for upper-layer understanding and reuse.
+- Base granularity for monitoring and alarms: Trends, threshold alarms, event linkage, and reporting all rely on points.
+- Input/output for the control loop: Strategies read **measurement** points to determine state and write to **action** points to issue targets.

@@ -1,9 +1,9 @@
----
+﻿---
 outline: deep
 ---
 
-# 设备实例配置
+# Device Instance Configuration
 
-![设备实例配置](../../../public/images/Setting/Configuration/deviceInstance/1.png)
+![Device Instance Configuration](/images/Setting/Configuration/deviceInstance/1.png)
 
-本章包括：实例管理、实例点位配置与实例点位路由配置。
+This chapter includes: instance management, instance point configuration, and instance point routing configuration.

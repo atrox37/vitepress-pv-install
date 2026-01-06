@@ -1,8 +1,8 @@
----
+﻿---
 outline: deep
 ---
 
-# 规则概念
+# Rule Concepts
 
-## 基础概念
-在 EMS 系统中，电池、PCS、光伏、柴油机等设备之间需要在不断变化的工况下协同运行，系统需要根据实时测量数据做出判断，并及时下发控制指令或调整运行参数（例如功率设定、启停、模式切换等），以实现安全稳定与经济优化的目标。为实现策略的标准化配置与可视化管理，平台引入了**规则（Rule）与规则链路（Rule Flow）**等概念。
+## Basic Concepts
+In EMS systems, devices such as batteries, PCS, PV, and diesel generators must cooperate under constantly changing operating conditions. The system must make judgments based on real-time measurements and promptly issue control commands or adjust operating parameters (such as power setpoints, start/stop, mode switching) to achieve safe, stable, and economical operation. To standardize strategy configuration and visual management, the platform introduces concepts such as **Rule** and **Rule Flow**.

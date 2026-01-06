@@ -1,13 +1,13 @@
----
+﻿---
 outline: deep
 ---
 
-# 规则
+# Rule
 
-## 概念定义
- 规则是 EMS 中用于表达“运行策略”的基本单元，用来描述系统在特定工况下应采取的控制逻辑。它把实时数据（测量值/状态量/计算结果）作为输入，通过条件判断确定当前场景，并输出对应的控制动作或参数调整结果。
-## 作用
+## Definition
+A rule is the basic unit used in EMS to express an "operating strategy." It describes the control logic the system should take under specific conditions. It takes real-time data (measurements/status/computed results) as inputs, determines the current scenario through conditions, and outputs corresponding control actions or parameter adjustments.
+## Role
 
-- 策略固化与自动化执行：把人工经验/调度策略配置成系统可自动执行的逻辑，实现无人值守的策略运行。
-- 运行目标落地：围绕安全、稳定、经济、效率等目标，在不同工况下自动选择合适的控制措施。
-- 统一管理与复用：规则可集中管理（启用/停用、优先级等），便于在不同站点或项目中复用与迁移。
+- Strategy solidification and automated execution: Configure human experience/dispatch strategies into logic that the system can execute automatically for unattended operation.
+- Operational objectives: Automatically choose appropriate control measures under different conditions to meet safety, stability, economy, and efficiency goals.
+- Unified management and reuse: Rules can be centrally managed (enable/disable, priority, etc.) and reused across different sites or projects.

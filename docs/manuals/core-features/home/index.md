@@ -21,5 +21,5 @@ The **Home** page mainly displays key data for the site and specific devices, an
 - The seventh section is site alarm information, showing current alarms from left to right:
   - Alarm device
   - Alarm level (sorted by urgency: **L1>L2>L3**)
-  <div class="mc-img-row"><img src="/images/home/3.png" alt="3" /><img src="/images/home/4.png" alt="4" /><img src="/images/home/5.png" alt="5" /></div>
+  <div class="mc-img-row"><img src="/images/home/3.png" alt="alarm level1" /><img src="/images/home/4.png" alt="alarm level2" /><img src="/images/home/5.png" alt="alarm level3" /></div>
   - Alarm information

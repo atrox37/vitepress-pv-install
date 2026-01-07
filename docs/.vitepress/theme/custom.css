@@ -1,29 +1,30 @@
 :root {
-  /* Palette constants */
+  /* ==========================================================================
+   * 调色板（基础色）
+   * ========================================================================== */
   --mc-theme-1: #15335f;
   --mc-theme-2: #1f427a;
   --mc-theme-3: #0f2444;
-  --mc-theme-soft-16: rgba(21, 51, 95, 0.16);
   --mc-theme-soft-08: rgba(21, 51, 95, 0.08);
+  --mc-theme-soft-16: rgba(21, 51, 95, 0.16);
   --mc-theme-soft-25: rgba(21, 51, 95, 0.25);
 
   --mc-sub-1: #ff6900;
   --mc-sub-2: #ff8a33;
-  --mc-sub-soft-16: rgba(255, 105, 0, 0.16);
   --mc-sub-soft-08: rgba(255, 105, 0, 0.08);
+  --mc-sub-soft-16: rgba(255, 105, 0, 0.16);
   --mc-sub-soft-25: rgba(255, 105, 0, 0.25);
 
-  --vp-header-anchor-symbol: '';
-
-  /*
-   * Global rule (NON-home included):
-   * - Light: use Theme color everywhere
-   * - Dark:  use Sub-theme color everywhere
+  /* ==========================================================================
+   * VitePress 主题变量（全局，包含非首页）
+   * - 明亮模式：统一用主题色（蓝）
+   * - 暗黑模式：统一用副主题色（橙）
    *
-   * VitePress uses `--vp-c-brand-*` + `--vp-c-accent-*`.
-   * To make "everything use one color", we map accent -> brand in light,
-   * and map brand/accent -> sub-theme in dark (below).
-   */
+   * VitePress 内部主要使用 `--vp-c-brand-*` + `--vp-c-accent-*`。
+   * 这里把 brand / accent 都映射到同一套颜色体系，保证站点一致性。
+   * ========================================================================== */
+  --vp-header-anchor-symbol: "";
+
   --vp-c-brand-1: var(--mc-theme-1);
   --vp-c-brand-2: var(--mc-theme-2);
   --vp-c-brand-3: var(--mc-theme-3);
@@ -34,13 +35,16 @@
   --vp-c-accent-soft: var(--mc-theme-soft-16);
   --vp-c-accent-border: rgba(21, 51, 95, 0.35);
 
-  /* Used by switch/slider track (e.g., Appearance toggle) */
+  /* 供开关/滑块轨道使用（例如外观切换） */
   --vp-input-switch-bg-color: var(--vp-c-accent-soft);
 
-  --vp-font-family-base: "Inter var experimental", "Inter var", Inter,
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
-    Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  /* 字体 */
+  --vp-font-family-base: "Inter var experimental", "Inter var", Inter, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
   --vp-font-family-heading: var(--vp-font-family-base);
+
+  /* 首页 Hero 视觉变量 */
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: linear-gradient(
     120deg,
@@ -57,7 +61,9 @@
   --vp-home-hero-image-filter: blur(0);
 }
 
-/* Global rule: Dark mode uses Sub-theme color everywhere (except Home overrides below) */
+/* ==========================================================================
+ * 暗黑模式：全局切换为副主题色（橙）
+ * ========================================================================== */
 .dark {
   --vp-c-brand-1: var(--mc-sub-1);
   --vp-c-brand-2: var(--mc-sub-2);
@@ -70,6 +76,7 @@
   --vp-c-accent-border: rgba(255, 105, 0, 0.42);
 
   --vp-input-switch-bg-color: var(--vp-c-accent-soft);
+
   --vp-home-hero-name-background: linear-gradient(
     120deg,
     var(--mc-sub-1) 0%,
@@ -84,7 +91,9 @@
   );
 }
 
-/* Home page keeps the current "theme + sub-theme" styling */
+/* ==========================================================================
+ * 首页：保持“主题色 + 副主题色”混搭（不随全局策略完全一致）
+ * ========================================================================== */
 .VPContent.is-home {
   --vp-c-brand-1: var(--mc-theme-1);
   --vp-c-brand-2: var(--mc-theme-2);
@@ -99,8 +108,8 @@
   --vp-input-switch-bg-color: var(--vp-c-accent-soft);
 }
 
-/* Home page keeps current Dark styling (accent switches to Theme/blue) */
 .dark .VPContent.is-home {
+  /* 暗黑-首页：brand=橙，accent=蓝 */
   --vp-c-brand-1: var(--mc-sub-1);
   --vp-c-brand-2: var(--mc-sub-2);
   --vp-c-brand-3: var(--mc-sub-2);
@@ -122,14 +131,18 @@
   color: rgba(255, 105, 0, 0.8);
 }
 
-/* Chinese font stack */
-:lang(zh) {
-  --vp-font-family-base: Quotes, -apple-system, BlinkMacSystemFont, "Segoe UI",
-  Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans",
-  "Helvetica Neue", sans-serif;
+/* ==========================================================================
+ * 字体：中文字体栈
+ * ========================================================================== */
+::lang(zh) {
+  --vp-font-family-base: Quotes, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   --vp-font-family-heading: var(--vp-font-family-base);
 }
 
+/* ==========================================================================
+ * 全局背景（站点渐变）
+ * ========================================================================== */
 body {
   background-image: radial-gradient(
       1200px 500px at 10% 0%,
@@ -144,7 +157,9 @@ body {
   background-attachment: fixed;
 }
 
-/* Inline image row helper (keeps multiple images on one line) */
+/* ==========================================================================
+ * 工具类
+ * ========================================================================== */
 .mc-img-row {
   display: flex;
   gap: 12px;
@@ -158,8 +173,11 @@ body {
   border-radius: 10px;
 }
 
-/* Mobile nav screen: ensure it always fills the viewport */
-@media (max-width: 959px) {
+/* ==========================================================================
+ * <960px（移动端/窄屏）行为
+ * 说明：为“只使用 min-width”，这里用 `not all and (min-width: 960px)` 表达 <960px
+ * ========================================================================== */
+@media (max-width: 960px) {
   /* Mobile nav screen (opened by hamburger): only apply when screen is open */
   .VPNavBar.screen-open + #VPNavScreen {
     display: block !important;
@@ -176,15 +194,15 @@ body {
     pointer-events: auto !important;
   }
 
-  /* <960px: hide export button in the top navbar (keep it inside the hamburger menu) */
+  /* <960px：顶部导航栏隐藏下载按钮（但在汉堡菜单里保留） */
   .VPNavBar .mc-export {
     display: none !important;
   }
 }
 
-/* (ViewerJS styles removed; image preview now uses PhotoSwipe) */
-
-/* Print/PDF: hide navigation chrome to make exported PDF cleaner */
+/* ==========================================================================
+ * 打印 / PDF（仅浏览器打印；站点的“导出 PDF”会在脚本里注入专用 CSS）
+ * ========================================================================== */
 @media print {
   .VPNav,
   .VPNavBar,
@@ -206,13 +224,17 @@ body {
   }
 }
 
+/* ==========================================================================
+ * 顶部导航 / 布局细节
+ * ========================================================================== */
 .VPNavBarTitle .title {
   font-family: var(--vp-font-family-heading);
   letter-spacing: 0.2px;
-  /* background-color: #ffffff; */
 }
-
-/* Visually "mask" the top part of the page scrollbar so it feels like it starts from the content area */
+.VPSwitch{
+  margin-right: 12px;
+}
+/* 视觉上“遮住”页面滚动条顶部区域，避免顶部出现颜色不一致的条带 */
 .VPNav::after {
   content: "";
   position: fixed;
@@ -221,22 +243,23 @@ body {
   height: var(--vp-nav-height);
   width: 12px;
   /*
-   * NOTE:
-   * `--vp-nav-bg-color` is usually a solid color, but on the Home hero the navbar
-   * background is transparent over a gradient page background, which can make
-   * this mask look like a "white strip". Keep it transparent to avoid mismatch.
+   * 说明：
+   * `--vp-nav-bg-color` 通常是纯色，但首页 Hero 区域顶部栏常为透明叠在渐变背景上，
+   * 这里如果强行填充颜色可能会出现“白条/色差”。保持透明即可。
    */
   background: transparent;
   z-index: 1000;
   pointer-events: none;
 }
 
+/* ==========================================================================
+ * 首页 Hero 视觉细节
+ * ========================================================================== */
 .VPHomeHero {
   position: relative;
   overflow: hidden;
 }
 
-/* Home Hero title: allow full width (keep gradient via --vp-home-hero-name-background) */
 .VPHomeHero .name {
   max-width: 100% !important;
   line-height: 1.4 !important;
@@ -263,12 +286,13 @@ body {
   opacity: 0.8;
 }
 
-.VPHome .text {
+.VPHome .text,
+.VPHome .name {
   font-family: var(--vp-font-family-heading);
-  letter-spacing: 0.3px;
 }
-.VPHome .name{
-  font-family: var(--vp-font-family-heading);
+
+.VPHome .text {
+  letter-spacing: 0.3px;
 }
 
 .VPHome .tagline {
@@ -276,6 +300,9 @@ body {
   color: rgba(21, 51, 95, 0.78);
 }
 
+/* ==========================================================================
+ * 按钮 / 卡片
+ * ========================================================================== */
 .VPButton.brand {
   background: var(--vp-c-brand-1);
   border-color: var(--vp-c-brand-1);
@@ -301,6 +328,9 @@ body {
   margin-top: 48px;
 }
 
+/* ==========================================================================
+ * 文档正文样式
+ * ========================================================================== */
 .vp-doc h1,
 .vp-doc h2,
 .vp-doc h3 {
@@ -320,16 +350,13 @@ body {
   background: var(--vp-c-accent-soft);
 }
 
+/* 选中文字样式（全局 + 首页覆盖） */
 ::selection {
   background: var(--vp-c-accent-soft);
   color: var(--vp-c-accent-1);
 }
 
 .VPContent.is-home ::selection {
-  /* Home selection should match doc behavior:
-   * - Light: theme (brand)
-   * - Dark:  sub-theme (accent)
-   */
   background: var(--mc-theme-soft-25);
   color: var(--mc-theme-1);
 }
@@ -339,27 +366,25 @@ body {
   color: var(--mc-sub-1);
 }
 
-/* Active nav emphasis */
+/* ==========================================================================
+ * 激活态（顶部导航 / 侧边栏）
+ * ========================================================================== */
 .VPNavBarMenuLink.active,
 .VPNavBarMenuLink.active .text {
   color: var(--vp-c-brand-1);
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.04em;
 }
 
-/* Active sidebar emphasis */
 .VPSidebarItem.is-active > .item > .text,
 .VPSidebarItem.is-active > .item > .text .title {
   color: var(--vp-c-brand-1);
   font-weight: 600;
 }
 
-/* NOTE:
- * Keep default VitePress scroll behavior so that:
- * - Right-side outline ("On this page") anchor scrolling works
- * - Hash navigation scrolls the correct container
- */
-
-/* Global scrollbar styling */
+/* ==========================================================================
+ * 滚动条
+ * ========================================================================== */
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--vp-c-accent-2) transparent;
@@ -391,34 +416,30 @@ body {
   height: 0;
   display: none;
 }
-/* Sidebar scroll starts below VPNav */
+
+/* ==========================================================================
+ * 桌面端（>=960px）布局调整
+ * ========================================================================== */
 @media (min-width: 960px) {
-  .VPHomeHero .name {
-    line-height: 1.4 !important;
-  }
-  .VPNavBar:not(.home){
+  /* 非首页：顶部栏背景与侧边栏背景一致 */
+  .VPNavBar:not(.home) {
     background-color: var(--vp-sidebar-bg-color) !important;
-    .VPNavBarTitle .title{
-      background-color: var(--vp-sidebar-bg-color) !important;
-    }
   }
+
+  .VPNavBar:not(.home) .VPNavBarTitle .title {
+    background-color: var(--vp-sidebar-bg-color) !important;
+  }
+
+  /* 侧边栏从顶部栏下方开始滚动 */
   .VPSidebar {
     top: var(--vp-nav-height) !important;
     height: calc(100vh - var(--vp-nav-height));
-     /* padding-top: calc(var(--vp-nav-height) + 32px); */
-    padding-top:0 !important;
-    padding-bottom:32px !important;
+    padding-top: 0 !important;
+    padding-bottom: 32px !important;
   }
 
   .VPSidebar .curtain {
     display: none;
   }
 }
-/* (intentionally left blank) */
-
-/* Stronger active state for top nav */
-.VPNavBarMenuLink.active,
-.VPNavBarMenuLink.active .text {
-  font-weight: 700;
-  font-size: 1.04em;
-}
+ 

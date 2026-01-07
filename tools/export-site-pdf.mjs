@@ -98,10 +98,33 @@ const EXPORT_ONLY_DOC_CSS = `
     width: auto !important;
   }
 
-  /* Avoid page breaks inside images/tables when possible */
-  img, table, pre, blockquote {
+  /*
+   * Pagination tuning
+   *
+   * "Long blank areas/pages" are usually caused by forcing large blocks
+   * (tables/code blocks/quotes) to stay unbroken (`break-inside: avoid`).
+   * When a block can't fit in the remaining space, it jumps to next page and
+   * leaves a big empty gap behind.
+   *
+   * Strategy:
+   * - Allow tables/code blocks/quotes to break across pages to reduce blanks.
+   * - Keep images as non-breaking when possible.
+   * - Repeat table headers when tables split.
+   */
+  table, pre, blockquote {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+
+  img {
     break-inside: avoid;
     page-break-inside: avoid;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  thead {
+    display: table-header-group;
   }
 `;
 

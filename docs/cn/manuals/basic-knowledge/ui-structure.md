@@ -3,7 +3,9 @@ outline: deep
 ---
 
 # 界面结构以及功能说明
+
 ![1](/images/common/1.PNG)
+
 整个用户界面首页主要分为三个部分：
 
 - 左侧：侧边栏菜单
@@ -47,12 +49,6 @@ outline: deep
           </li>
         </ul>
       </div>
-
-      <img
-        src="/images/common/2.png"
-        alt="2"
-        style="zoom:35%; display:block; max-width:100%;"
-      />
     </div>
   - 用户可以通过侧边栏右下角的缩放图标按钮，进行菜单栏的宽度缩放。
 

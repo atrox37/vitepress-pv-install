@@ -34,8 +34,8 @@
 2. 用叉车把固定框架上边抬起和固定框架侧边的安装孔对齐放置
 
 <!-- <div class="mc-img-row"> -->
-  <img src="/images/step/step1/（2）/②.1.jpg" alt="步骤1-②.1" style="width:100%;"/>
-  <img src="/images/step/step1/（2）/②.2.png" alt="步骤1-②.2" style="width:100%;"/>
+  <img src="/images/step/step1/（2）/②.1.jpg" alt="步骤1-②.1" style="width:auto !import;"/>
+  <img src="/images/step/step1/（2）/②.2.png" alt="步骤1-②.2" style="width:auto !import;"/>
 <!-- </div> -->
 3. 工人站在登高梯上对固定框架上边和侧边对齐的安装孔里对穿M16X35法兰螺栓螺母用电动扳手紧固螺栓（一边6处共12处）
 

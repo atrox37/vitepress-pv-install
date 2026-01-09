@@ -441,5 +441,18 @@ body {
   .VPSidebar .curtain {
     display: none;
   }
+
+  /* Hide search and menu buttons on video library page (desktop) */
+  .VPNavBar .VPNavBarActions {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+ * Video Library Page Styles
+ * ========================================================================== */
+/* Hide default VitePress layout elements on video library page */
+:global(.VPContent) .video-library {
+  max-width: 100%;
 }
  

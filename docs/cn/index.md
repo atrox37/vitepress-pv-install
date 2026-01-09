@@ -1,20 +1,125 @@
 ---
-# https://vitepress.dev/reference/default-theme-home-page
 layout: home
-
-hero:
-  name: "Monarch Edge 用户手册"
-  text: ""
-  tagline: 面向站端实时数据、工业通信接入、设备模型管理与告警处置的统一运行支撑
-  actions: []
-
-features:
-  - title: 实时数据与运行态可视化
-    details: 提供站点与设备的实时数据展示与运行状态视图，面向现场快速感知运行健康度与变化趋势。
-  - title: 工业通信接入与配置管理
-    details: 支持多协议接入与通信配置管理，提供链路状态监测与诊断能力，便于现场联调与问题定位。
-  - title: 设备模型映射与一致性校验
-    details: 支持设备/子系统分层建模与点表映射，提供与上层/云端模型的一致性检查，确保数据语义对齐。
-  - title: 本地控制与告警处置闭环
-    details: 提供本地控制操作入口与告警管理能力，支持从告警触发到处置执行的闭环流程，提升现场响应效率。
 ---
+
+# 折叠支架安装手册
+
+欢迎使用折叠支架安装手册。本手册将指导您完成光伏支架的完整安装过程。
+
+## 快速导航
+
+<div class="home-grid">
+  <div class="home-card">
+    <h3>📋 安装概况</h3>
+    <p>了解安装手册的目的、重要性以及所需材料和工具清单</p>
+    <a href="/cn/manuals/purpose.html" class="home-link">开始阅读 →</a>
+  </div>
+
+  <div class="home-card">
+    <h3>🔧 准备工作</h3>
+    <p>确保安装环境适宜，完成安装前的检查和测试，了解人员职责要求</p>
+    <a href="/cn/manuals/environment.html" class="home-link">开始阅读 →</a>
+  </div>
+
+  <div class="home-card">
+    <h3>⚙️ 安装步骤</h3>
+    <p>详细的安装步骤指导，从固定框架组装到折叠打包的完整流程</p>
+    <a href="/cn/manuals/step1-fixed-frame.html" class="home-link">开始阅读 →</a>
+  </div>
+
+  <div class="home-card">
+    <h3>✅ 调试与验收</h3>
+    <p>结构稳定性检查和运动测试，确保安装质量符合要求</p>
+    <a href="/cn/manuals/stability-check.html" class="home-link">开始阅读 →</a>
+  </div>
+
+  <div class="home-card">
+    <h3>📎 附件</h3>
+    <p>打样装配图片和物料清单等参考资料</p>
+    <a href="/cn/manuals/prototype-images.html" class="home-link">开始阅读 →</a>
+  </div>
+</div>
+
+## 安装流程概览
+
+1. **安装概况** - 了解安装手册的目的、材料和工具清单、预期结果
+2. **准备工作** - 确保安装环境、检查工具和零部件、确认人员资质
+3. **安装步骤** - 按照7个步骤完成安装：
+   - 步骤1：固定框架组装
+   - 步骤2：组合框架组装
+   - 步骤3：组装固定框架与组合框架
+   - 步骤4：各轴杆组合连接组件梁框架
+   - 步骤5：安装光伏组件
+   - 步骤6：安装光伏组件串联线
+   - 步骤7：折叠打包
+4. **调试与验收** - 结构稳定性检查和运动测试
+5. **附件** - 参考图片和物料清单
+
+---
+
+<div class="home-tip">
+  <strong>💡 提示：</strong> 请按照手册顺序进行安装，确保每个步骤都正确完成后再进行下一步。
+</div>
+
+<style>
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin: 32px 0;
+}
+
+.home-card {
+  background: #ffffff;
+  border: 1px solid rgba(21, 51, 95, 0.1);
+  border-radius: 8px;
+  padding: 24px;
+  transition: all 0.3s;
+}
+
+.home-card:hover {
+  border-color: var(--mc-theme-1);
+  box-shadow: 0 4px 12px rgba(21, 51, 95, 0.1);
+  transform: translateY(-2px);
+}
+
+.home-card h3 {
+  color: var(--mc-theme-1);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.home-card p {
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 16px 0;
+}
+
+.home-link {
+  display: inline-block;
+  color: var(--mc-sub-1);
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.home-link:hover {
+  color: var(--mc-theme-1);
+}
+
+.home-tip {
+  background: rgba(21, 51, 95, 0.05);
+  border-left: 4px solid var(--mc-theme-1);
+  padding: 16px 20px;
+  border-radius: 4px;
+  margin-top: 32px;
+}
+
+.home-tip strong {
+  color: var(--mc-theme-1);
+}
+</style>
+

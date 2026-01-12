@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+import { spawn, execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { chromium } from "playwright";
@@ -425,6 +425,52 @@ async function isServerUp(url) {
 }
 
 /**
+ * 关闭占用指定端口的进程（Windows 和 Linux/Mac 都支持）
+ */
+function killProcessOnPort(port) {
+  try {
+    if (process.platform === "win32") {
+      // Windows: 使用 netstat 查找占用端口的进程，然后 taskkill 终止
+      const result = execSync(`netstat -ano | findstr ":${port}"`, { encoding: "utf-8" });
+      const lines = result.trim().split("\n");
+      const pids = new Set();
+      for (const line of lines) {
+        const match = line.match(/\s+(\d+)\s*$/);
+        if (match) {
+          pids.add(match[1]);
+        }
+      }
+      for (const pid of pids) {
+        try {
+          execSync(`taskkill /F /PID ${pid}`, { stdio: "ignore" });
+          console.log(`已终止占用端口 ${port} 的进程 (PID: ${pid})`);
+        } catch (e) {
+          // 忽略错误，可能进程已经不存在
+        }
+      }
+    } else {
+      // Linux/Mac: 使用 lsof 查找占用端口的进程，然后 kill 终止
+      try {
+        const result = execSync(`lsof -ti:${port}`, { encoding: "utf-8" });
+        const pids = result.trim().split("\n").filter(Boolean);
+        for (const pid of pids) {
+          try {
+            execSync(`kill -9 ${pid}`, { stdio: "ignore" });
+            console.log(`已终止占用端口 ${port} 的进程 (PID: ${pid})`);
+          } catch (e) {
+            // 忽略错误
+          }
+        }
+      } catch (e) {
+        // 没有找到占用端口的进程，忽略
+      }
+    }
+  } catch (e) {
+    // 忽略错误，继续执行
+  }
+}
+
+/**
  * 从videos.json中查找视频信息（包括标题）
  */
 function findVideoInfoByUrl(videosData, videoUrl) {
@@ -788,6 +834,12 @@ function safeWritePdf(outFile, bytes) {
 }
 
 async function main() {
+  // 0) 关闭可能运行的预览服务器，避免文件被占用导致构建失败
+  console.log("检查并关闭可能占用端口的预览服务器...");
+  killProcessOnPort(PORT);
+  // 等待一下，确保进程完全关闭
+  await new Promise((r) => setTimeout(r, 1000));
+  
   // 1) Build the site（确保路由/样式/图片都是最终效果）
   await run(pnpmCmd(), ["-s", "docs:build"]);
 

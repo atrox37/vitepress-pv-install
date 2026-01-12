@@ -18,6 +18,6 @@
 | Marker Pen | <img src="/images/tools/记号笔.png" class="tool-img" /> | 2 | Black |
 | Open-end Wrench | <img src="/images/tools/开口扳手.png" class="tool-img" /> | 2 | Size 24mm |
 | Hex Wrench | <img src="/images/tools/内力角扳手.png" class="tool-img" /> | 2 | |
-| Large Wrench | <img src="/images/tools/大扳手.jpg" class="tool-img" /> | 2 | |
+| Large Wrench | <img src="/images/tools/大扳手.png" class="tool-img" /> | 2 | |
 | Ladder | <img src="/images/tools/登高梯.png" class="tool-img" /> | 1 | Height 1.5-2 meters |
 

@@ -20,6 +20,8 @@ jobs:
           node-version: 20
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Generate PDFs
+        run: pnpm docs:pdf
       - run: pnpm docs:build
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4

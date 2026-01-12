@@ -165,9 +165,22 @@ body {
   gap: 12px;
   align-items: center;
   justify-content: center;
+  text-align: center;
   /* width: 80%; */
 }
-
+.mc-img-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.mc-img-column > img {
+  width: 80%;
+  height: auto;
+  object-fit: contain;
+}
 .mc-img-row > img {
   flex: 1 1 0;
   min-width: 0;

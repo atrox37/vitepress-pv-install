@@ -40,7 +40,7 @@ PDF生成使用以下技术栈和流程：
 
 ### 1. 提高设备缩放因子
 ```javascript
-deviceScaleFactor: 2  // 从1提高到2，提升图片清晰度
+deviceScaleFactor: 3  // 从1提高到2，提升图片清晰度
 ```
 
 ### 2. 增大视口尺寸

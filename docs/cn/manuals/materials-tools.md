@@ -18,5 +18,5 @@
 | 记号笔 | <img src="/images/tools/记号笔.png" class="tool-img" /> | 2 | 黑色 |
 | 开口扳手 | <img src="/images/tools/开口扳手.png" class="tool-img" /> | 2 | 规格24mm |
 | 内六角扳手 | <img src="/images/tools/内力角扳手.png" class="tool-img" /> | 2 | |
-| 大扳手 | <img src="/images/tools/大扳手.jpg" class="tool-img" /> | 2 | |
+| 大扳手 | <img src="/images/tools/大扳手.png" class="tool-img" /> | 2 | |
 | 登高梯 | <img src="/images/tools/登高梯.png" class="tool-img" /> | 1 | 高度1.5-2米 |

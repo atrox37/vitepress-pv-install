@@ -51,6 +51,8 @@ const distDir = path.join(repoRoot, "docs", ".vitepress", "dist");
 
 const PORT = Number(process.env.PDF_PORT || 4173);
 const BASE_URL = `http://127.0.0.1:${PORT}`;
+// 固定域名前缀（用于二维码URL）
+const QR_CODE_DOMAIN = "http://mgs-pv-install.s3-website-us-east-1.amazonaws.com";
 
 // PDF output: Chinese and English folding-bracket-installation
 const OUT_EN = path.join(repoRoot, "docs", "public", "downloads", "en", "Folding Bracket Installation Manual.pdf");
@@ -423,6 +425,35 @@ async function isServerUp(url) {
 }
 
 /**
+ * 从videos.json中查找视频信息（包括标题）
+ */
+function findVideoInfoByUrl(videosData, videoUrl) {
+  if (!videosData || !videosData.steps) return null;
+  
+  for (const step of videosData.steps) {
+    // 检查主步骤视频
+    if (step.videoUrl === videoUrl) {
+      return {
+        id: step.id,
+        title: step.title
+      };
+    }
+    // 检查子步骤视频
+    if (step.subSteps) {
+      for (const subStep of step.subSteps) {
+        if (subStep.videoUrl === videoUrl) {
+          return {
+            id: subStep.id,
+            title: subStep.title
+          };
+        }
+      }
+    }
+  }
+  return null;
+}
+
+/**
  * 将页面中的视频标签转换为二维码
  */
 async function convertVideosToQRCode(page, lang = "cn") {
@@ -462,14 +493,20 @@ async function convertVideosToQRCode(page, lang = "cn") {
   for (let i = videoData.length - 1; i >= 0; i--) {
     const { index, url, isInMcImgRow } = videoData[i];
     try {
-      // 查找视频ID
-      const videoId = findVideoIdByUrl(videosData, url);
+      // 查找视频ID和标题信息
+      const videoInfo = findVideoInfoByUrl(videosData, url);
+      const videoId = videoInfo ? videoInfo.id : findVideoIdByUrl(videosData, url);
       
-      // 构建跳转URL（视频库页面）- 使用相对路径，这样可以在任何域名下工作
+      // 构建跳转URL（视频库页面）- 使用固定域名前缀
       const basePath = lang === "cn" ? "/cn/video-library/" : "/video-library/";
-      const qrCodeUrl = videoId 
-        ? `${basePath}?video=${videoId}`
-        : url; // 如果找不到ID，使用原始视频URL作为后备
+      let qrCodeUrl;
+      if (videoId) {
+        // 如果找到视频ID，构建视频库页面URL
+        qrCodeUrl = `${QR_CODE_DOMAIN}${basePath}?video=${videoId}`;
+      } else {
+        // 如果找不到ID，使用原始视频URL作为后备（已经是完整URL）
+        qrCodeUrl = url;
+      }
       
       // 生成二维码（Base64格式）
       const qrCodeDataURL = await QRCode.toDataURL(qrCodeUrl, {
@@ -481,8 +518,15 @@ async function convertVideosToQRCode(page, lang = "cn") {
         },
       });
 
-      // 提取视频名称
-      const videoName = decodeURIComponent(url.split("/").pop() || "").replace(/\.mp4$/i, "") || "Video";
+      // 从videos.json中获取视频名称，如果没有则从URL提取
+      let videoName = "Video";
+      if (videoInfo && videoInfo.title) {
+        // 根据语言选择对应的标题
+        videoName = lang === "cn" ? videoInfo.title.zh : videoInfo.title.en;
+      } else {
+        // 后备方案：从URL提取文件名
+        videoName = decodeURIComponent(url.split("/").pop() || "").replace(/\.mp4$/i, "") || "Video";
+      }
       
       // 根据语言选择说明文字
       const descriptionText = lang === "cn" 

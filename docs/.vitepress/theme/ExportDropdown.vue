@@ -30,11 +30,15 @@ function toHref(path: string) {
 }
 
 const pdfHref = computed(() =>
-  isEnglish.value ? toHref("/downloads/en/user-manual.pdf") : toHref("/downloads/zh-cn/user-manual.pdf")
+  isEnglish.value
+    ? toHref("/downloads/en/Folding Bracket Installation Manual.pdf")
+    : toHref("/downloads/zh-cn/折叠支架安装手册.pdf")
 );
 
 const pdfDownloadName = computed(() =>
-  isEnglish.value ? "User Manual.pdf" : "普通用户手册.pdf"
+  isEnglish.value
+    ? "Folding Bracket Installation Manual.pdf"
+    : "折叠支架安装手册.pdf"
 );
 
 // 旧策略（暂时注释）：下载整站导出 PDF

@@ -163,7 +163,9 @@ body {
 .mc-img-row {
   display: flex;
   gap: 12px;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
+  /* width: 80%; */
 }
 
 .mc-img-row > img {
@@ -171,6 +173,18 @@ body {
   min-width: 0;
   height: auto;
   border-radius: 10px;
+}
+/* img{
+  width: 80%;
+  height: auto;
+} */
+/* 工具图片类：用于表格中的图片 */
+.tool-img {
+  height: 70px !important;
+  width: auto !important;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
 }
 
 /* ==========================================================================
@@ -454,5 +468,20 @@ body {
 /* Hide default VitePress layout elements on video library page */
 :global(.VPContent) .video-library {
   max-width: 100%;
+}
+
+/* ==========================================================================
+ * 视频样式：统一限制所有视频的高度
+ * ========================================================================== */
+.vp-doc video {
+  width: 100%;
+  max-width: 800px;
+  height: 450px !important; /* 统一高度，限制竖形视频过高 */
+  object-fit: contain; /* 保持视频比例，避免变形 */
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  background: #000;
 }
  

@@ -38,10 +38,10 @@ export default defineConfig({
   ],
   themeConfig: {
     logo: "/logo.png",
-    // 启用页面大纲（显示页面内的标题层级）
+    // Enable page outline (display heading hierarchy within pages)
     outline: {
-      level: [2, 6], // 显示 h2 到 h6 的标题
-      label: "页面目录",
+      level: [2, 6], // Display h2 to h6 headings
+      label: "Page Outline",
     },
     /**
      * 本地搜索（不依赖 Algolia 等外部服务）
@@ -95,12 +95,165 @@ export default defineConfig({
       label: "English",
       link: "/",
       lang: "en-US",
-      title: "Monarch Edge Manual",
-      description: "User guide and operational manual for Monarch Edge.",
+      title: "Folding Bracket Installation Manual",
+      description: "Folding Bracket Installation Manual - User guide and operational manual.",
       themeConfig: {
-        siteTitle: "Monarch Edge Manual",
-        nav: [],
-        sidebar: {},
+        siteTitle: "Folding Bracket Manual",
+        nav: [
+          {
+            text: "Installation Overview",
+            link: "/manuals/purpose.html",
+            activeMatch: "^/manuals/(purpose|materials-tools|expected-results)",
+          },
+          {
+            text: "Preparation",
+            link: "/manuals/environment.html",
+            activeMatch: "^/manuals/(environment|pre-installation-check|personnel-requirements)",
+          },
+          {
+            text: "Installation Steps",
+            link: "/manuals/step1-fixed-frame.html",
+            activeMatch: "^/manuals/step",
+          },
+          {
+            text: "Debugging and Acceptance",
+            link: "/manuals/stability-check.html",
+            activeMatch: "^/manuals/(stability-check|motion-test)",
+          },
+          {
+            text: "Appendix",
+            link: "/manuals/prototype-images.html",
+            activeMatch: "^/manuals/(prototype-images|material-list)",
+          },
+        ],
+        sidebar: {
+          // Installation Overview pages
+          "/manuals/purpose": [
+            {
+              text: "Installation Overview",
+              collapsed: false,
+              items: [
+                { text: "Purpose and Importance of Installation Manual", link: "/manuals/purpose.html" },
+                { text: "Materials and Tools List", link: "/manuals/materials-tools.html" },
+                { text: "Expected Results and Effects", link: "/manuals/expected-results.html" },
+              ],
+            },
+          ],
+          "/manuals/materials-tools": [
+            {
+              text: "Installation Overview",
+              collapsed: false,
+              items: [
+                { text: "Purpose and Importance of Installation Manual", link: "/manuals/purpose.html" },
+                { text: "Materials and Tools List", link: "/manuals/materials-tools.html" },
+                { text: "Expected Results and Effects", link: "/manuals/expected-results.html" },
+              ],
+            },
+          ],
+          "/manuals/expected-results": [
+            {
+              text: "Installation Overview",
+              collapsed: false,
+              items: [
+                { text: "Purpose and Importance of Installation Manual", link: "/manuals/purpose.html" },
+                { text: "Materials and Tools List", link: "/manuals/materials-tools.html" },
+                { text: "Expected Results and Effects", link: "/manuals/expected-results.html" },
+              ],
+            },
+          ],
+          // Preparation pages
+          "/manuals/environment": [
+            {
+              text: "Preparation",
+              collapsed: false,
+              items: [
+                { text: "Ensure Suitable Installation Environment", link: "/manuals/environment.html" },
+                { text: "Pre-installation Inspection and Testing", link: "/manuals/pre-installation-check.html" },
+                { text: "Personnel Requirements", link: "/manuals/personnel-requirements.html" },
+              ],
+            },
+          ],
+          "/manuals/pre-installation-check": [
+            {
+              text: "Preparation",
+              collapsed: false,
+              items: [
+                { text: "Ensure Suitable Installation Environment", link: "/manuals/environment.html" },
+                { text: "Pre-installation Inspection and Testing", link: "/manuals/pre-installation-check.html" },
+                { text: "Personnel Requirements", link: "/manuals/personnel-requirements.html" },
+              ],
+            },
+          ],
+          "/manuals/personnel-requirements": [
+            {
+              text: "Preparation",
+              collapsed: false,
+              items: [
+                { text: "Ensure Suitable Installation Environment", link: "/manuals/environment.html" },
+                { text: "Pre-installation Inspection and Testing", link: "/manuals/pre-installation-check.html" },
+                { text: "Personnel Requirements", link: "/manuals/personnel-requirements.html" },
+              ],
+            },
+          ],
+          // Installation Steps pages
+          "/manuals/step": [
+            {
+              text: "Installation Steps",
+              collapsed: false,
+              items: [
+                { text: "Step 1 - Fixed Frame Assembly", link: "/manuals/step1-fixed-frame.html" },
+                { text: "Step 2 - Combined Frame Assembly", link: "/manuals/step2-combined-frame.html" },
+                { text: "Step 3 - Assembly of Fixed Frame and Combined Frame", link: "/manuals/step3-assembly.html" },
+                { text: "Step 4 - Connecting Rod Assemblies to Component Beam Frame", link: "/manuals/step4-rod-assembly.html" },
+                { text: "Step 5 - Install PV Modules", link: "/manuals/step5-pv-modules.html" },
+                { text: "Step 6 - Install PV Module Series Wiring", link: "/manuals/step6-wiring.html" },
+                { text: "Step 7 - Folding and Packing", link: "/manuals/step7-folding.html" },
+              ],
+            },
+          ],
+          // Debugging and Acceptance pages
+          "/manuals/stability-check": [
+            {
+              text: "Debugging and Acceptance",
+              collapsed: false,
+              items: [
+                { text: "Structural Stability Check", link: "/manuals/stability-check.html" },
+                { text: "Motion Test", link: "/manuals/motion-test.html" },
+              ],
+            },
+          ],
+          "/manuals/motion-test": [
+            {
+              text: "Debugging and Acceptance",
+              collapsed: false,
+              items: [
+                { text: "Structural Stability Check", link: "/manuals/stability-check.html" },
+                { text: "Motion Test", link: "/manuals/motion-test.html" },
+              ],
+            },
+          ],
+          // Appendix pages
+          "/manuals/prototype-images": [
+            {
+              text: "Appendix",
+              collapsed: false,
+              items: [
+                { text: "Prototype Assembly Images", link: "/manuals/prototype-images.html" },
+                { text: "Material List", link: "/manuals/material-list.html" },
+              ],
+            },
+          ],
+          "/manuals/material-list": [
+            {
+              text: "Appendix",
+              collapsed: false,
+              items: [
+                { text: "Prototype Assembly Images", link: "/manuals/prototype-images.html" },
+                { text: "Material List", link: "/manuals/material-list.html" },
+              ],
+            },
+          ],
+        },
         footer: {
           message: "Internal Use Only · Do Not Distribute",
           copyright: "(c) Monarch Edge",
@@ -111,10 +264,14 @@ export default defineConfig({
       label: "简体中文",
       link: "/cn/",
       lang: "zh-CN",
-      title: "MGS 光伏安装手册",
-      description: "MGS 光伏安装手册使用说明与操作指引",
+      title: "折叠支架安装手册",
+      description: "折叠支架安装手册使用说明与操作指引",
       themeConfig: {
-        siteTitle: "MGS 光伏安装手册",
+        siteTitle: "折叠支架安装手册",
+        outline: {
+          level: [2, 6],
+          label: "页面目录",
+        },
         nav: [
           {
             text: "安装概况",

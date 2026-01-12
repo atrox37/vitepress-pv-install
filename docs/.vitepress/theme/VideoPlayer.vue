@@ -122,7 +122,16 @@ const downloadVideo = async () => {
 }
 
 const openManual = () => {
-  window.open(withBase(props.video.manualLink), '_blank')
+  // 从 manualLink 中提取文件名（例如：从 /cn/manuals/step1-fixed-frame.html 提取 step1-fixed-frame.html）
+  const manualLink = props.video.manualLink
+  const fileName = manualLink.split('/').pop() || 'step1-fixed-frame.html'
+  
+  // 根据当前语言构建正确的路径
+  const manualPath = isEnglish.value
+    ? `/manuals/${fileName}`  // 英文：/manuals/step1-fixed-frame.html
+    : `/cn/manuals/${fileName}`  // 中文：/cn/manuals/step1-fixed-frame.html
+  
+  window.open(withBase(manualPath), '_blank')
 }
 
 const showControlsTemporarily = () => {

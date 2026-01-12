@@ -3,7 +3,7 @@ import "./custom.css";
 
 import { h } from "vue";
 import { inBrowser, withBase } from "vitepress";
-// import ExportDropdown from "./ExportDropdown.vue";
+import ExportDropdown from "./ExportDropdown.vue";
 import PhotoSwipeImages from "./PhotoSwipeImages.vue";
 
 function normalizeHtmlTrailingSlash() {
@@ -23,8 +23,8 @@ export default {
     // Keep DefaultTheme layout, inject a small client-only component to enable
     // image full-screen preview after mount + on route changes.
     return h(DefaultTheme.Layout, null, {
-      // "nav-bar-content-after": () => h(ExportDropdown),
-      // "nav-screen-content-after": () => h(ExportDropdown),
+      "nav-bar-content-after": () => h(ExportDropdown),
+      "nav-screen-content-after": () => h(ExportDropdown),
       "layout-bottom": () => h(PhotoSwipeImages),
     });
   },

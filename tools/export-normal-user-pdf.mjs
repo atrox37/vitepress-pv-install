@@ -7,6 +7,44 @@ import {
   StandardFonts,
   rgb,
 } from "pdf-lib";
+import QRCode from "qrcode";
+
+// 加载videos.json以建立视频URL到视频ID的映射
+function loadVideosData() {
+  const videosJsonPath = path.join(repoRoot, "docs", "video-library", "data", "videos.json");
+  if (!fs.existsSync(videosJsonPath)) {
+    console.warn("未找到videos.json文件，将使用视频URL作为二维码链接");
+    return null;
+  }
+  try {
+    const videosData = JSON.parse(fs.readFileSync(videosJsonPath, "utf-8"));
+    return videosData;
+  } catch (error) {
+    console.warn("读取videos.json失败:", error.message);
+    return null;
+  }
+}
+
+// 根据视频URL查找对应的视频ID
+function findVideoIdByUrl(videosData, videoUrl) {
+  if (!videosData || !videosData.steps) return null;
+  
+  for (const step of videosData.steps) {
+    // 检查主步骤视频
+    if (step.videoUrl === videoUrl) {
+      return step.id;
+    }
+    // 检查子步骤视频
+    if (step.subSteps) {
+      for (const subStep of step.subSteps) {
+        if (subStep.videoUrl === videoUrl) {
+          return subStep.id;
+        }
+      }
+    }
+  }
+  return null;
+}
 
 const repoRoot = process.cwd();
 const distDir = path.join(repoRoot, "docs", ".vitepress", "dist");
@@ -14,11 +52,12 @@ const distDir = path.join(repoRoot, "docs", ".vitepress", "dist");
 const PORT = Number(process.env.PDF_PORT || 4173);
 const BASE_URL = `http://127.0.0.1:${PORT}`;
 
-// 输出：按语言分别生成“普通用户手册（normal-user）”PDF
-const OUT_EN = path.join(repoRoot, "docs", "public", "downloads", "en", "user-manual.pdf");
-const OUT_ZH = path.join(repoRoot, "docs", "public", "downloads", "zh-cn", "user-manual.pdf");
+// PDF output: Chinese and English folding-bracket-installation
+const OUT_EN = path.join(repoRoot, "docs", "public", "downloads", "en", "Folding Bracket Installation Manual.pdf");
+const OUT_ZH = path.join(repoRoot, "docs", "public", "downloads", "zh-cn", "折叠支架安装手册.pdf");
 
-const HEADER_FOOTER_PDF = path.join(repoRoot, "tools", "pdf-assets", "header-footer-template.pdf");
+const HEADER_FOOTER_PDF_CN = path.join(repoRoot, "tools", "pdf-assets", "header-footer-template-cn.pdf");
+const HEADER_FOOTER_PDF_EN = path.join(repoRoot, "tools", "pdf-assets", "header-footer-template.pdf");
 
 // 模板渲染效果：更“灰 + 半透明”，不抢正文
 // - opacity 越小越淡（0~1）
@@ -73,6 +112,16 @@ async function ensureImagesLoaded(page) {
       // @ts-ignore
       img.decoding = "sync";
       img.removeAttribute("loading");
+      // 确保图片以原始尺寸显示，避免被CSS限制
+      if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+        // 如果图片已加载，确保使用原始尺寸
+        const style = window.getComputedStyle(img);
+        if (style.width === 'auto' || style.maxWidth === '100%') {
+          // 保持原始宽高比，但允许在容器内缩放
+          img.style.maxWidth = '100%';
+          img.style.height = 'auto';
+        }
+      }
     });
   });
 
@@ -271,10 +320,56 @@ const EXPORT_ONLY_DOC_CSS = `
     page-break-inside: avoid;
     max-width: 100% !important;
     height: auto !important;
+    /* 确保图片以高质量渲染，避免压缩 */
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
+    /* 防止图片被缩放导致模糊 */
+    object-fit: contain !important;
   }
 
   thead {
     display: table-header-group;
+  }
+
+  /* 表格样式：确保边框显示 */
+  table {
+    border-collapse: collapse !important;
+    border: 1px solid #ddd !important;
+    width: 100% !important;
+    margin: 16px 0 !important;
+  }
+
+  table th,
+  table td {
+    border: 1px solid #ddd !important;
+    padding: 8px 12px !important;
+    text-align: left !important;
+  }
+
+  table th {
+    background-color: #f5f5f5 !important;
+    font-weight: 600 !important;
+  }
+
+  /* 表格中的图片样式 */
+  table .tool-img {
+    height: 120px !important;
+    width: auto !important;
+    object-fit: contain !important;
+    display: block !important;
+    margin: 0 auto !important;
+  }
+
+  /* 单独图片样式 - 确保高质量渲染 */
+  .mc-img-row img:not(.tool-img) {
+    max-width: 100% !important;
+    height: auto !important;
+    /* 保持图片原始质量，避免压缩 */
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
+    object-fit: contain !important;
+    /* 确保图片完整显示，不被裁剪 */
+    object-position: center !important;
   }
 `;
 
@@ -327,7 +422,167 @@ async function isServerUp(url) {
   }
 }
 
-async function renderSinglePageToPdf(url, outFile, { backgroundTemplatePath }) {
+/**
+ * 将页面中的视频标签转换为二维码
+ */
+async function convertVideosToQRCode(page, lang = "cn") {
+  // 加载videos.json数据
+  const videosData = loadVideosData();
+  
+  // 提取所有视频URL和索引，同时获取视频元素的完整信息
+  const videoData = await page.evaluate(() => {
+    const videos = Array.from(document.querySelectorAll("video"));
+    return videos.map((video, index) => {
+      const source = video.querySelector("source");
+      const videoUrl = source?.getAttribute("src") || "";
+      
+      // 检查视频是否在mc-img-row容器中
+      const parent = video.parentNode;
+      const isInMcImgRow = parent && parent.classList && parent.classList.contains("mc-img-row");
+      
+      return {
+        index,
+        url: videoUrl,
+        isInMcImgRow,
+        parentIsMcImgRow: isInMcImgRow,
+      };
+    }).filter((item) => item.url);
+  });
+
+  if (videoData.length === 0) {
+    return;
+  }
+
+  console.log(`找到 ${videoData.length} 个视频，转换为二维码...`);
+
+  let successCount = 0;
+  let failCount = 0;
+
+  // 为每个视频生成二维码并替换（反向处理，避免索引错位）
+  for (let i = videoData.length - 1; i >= 0; i--) {
+    const { index, url, isInMcImgRow } = videoData[i];
+    try {
+      // 查找视频ID
+      const videoId = findVideoIdByUrl(videosData, url);
+      
+      // 构建跳转URL（视频库页面）- 使用相对路径，这样可以在任何域名下工作
+      const basePath = lang === "cn" ? "/cn/video-library/" : "/video-library/";
+      const qrCodeUrl = videoId 
+        ? `${basePath}?video=${videoId}`
+        : url; // 如果找不到ID，使用原始视频URL作为后备
+      
+      // 生成二维码（Base64格式）
+      const qrCodeDataURL = await QRCode.toDataURL(qrCodeUrl, {
+        width: 120,
+        margin: 1,
+        color: {
+          dark: "#000000",
+          light: "#FFFFFF",
+        },
+      });
+
+      // 提取视频名称
+      const videoName = decodeURIComponent(url.split("/").pop() || "").replace(/\.mp4$/i, "") || "Video";
+      
+      // 根据语言选择说明文字
+      const descriptionText = lang === "cn" 
+        ? `扫描二维码观看视频：${videoName}`
+        : `Scan QR code to watch video: ${videoName}`;
+
+      // 在页面中替换视频元素为二维码
+      // 注意：由于是反向处理，需要通过URL匹配来找到正确的视频元素
+      const replaced = await page.evaluate(
+        ({ qrCodeDataURL, descriptionText, videoUrl, isInMcImgRowContainer }) => {
+          const videos = Array.from(document.querySelectorAll("video"));
+          // 通过URL匹配找到对应的视频元素
+          const video = videos.find(v => {
+            const source = v.querySelector("source");
+            return source?.getAttribute("src") === videoUrl;
+          });
+          if (!video) {
+            console.warn(`未找到视频元素: ${videoUrl}`);
+            return false;
+          }
+
+          // 创建替换容器
+          const container = document.createElement("div");
+          container.className = "video-qr-container";
+          container.style.cssText = "text-align: center; margin: 20px 0;";
+
+          // 创建二维码图片
+          const qrImg = document.createElement("img");
+          qrImg.src = qrCodeDataURL;
+          qrImg.alt = `QR Code for ${descriptionText}`;
+          qrImg.style.cssText = "width: 120px; height: 120px; display: block; margin: 0 auto 10px;";
+
+          // 创建说明文字
+          const desc = document.createElement("p");
+          desc.textContent = descriptionText;
+          desc.style.cssText = "font-size: 12px; color: #666; margin: 0;";
+
+          container.appendChild(qrImg);
+          container.appendChild(desc);
+
+          // 替换视频元素
+          const parent = video.parentNode;
+          if (isInMcImgRowContainer && parent && parent.classList && parent.classList.contains("mc-img-row")) {
+            // 如果视频在mc-img-row中且是唯一子元素，替换整个容器
+            if (parent.children.length === 1 && parent.children[0] === video) {
+              parent.parentNode?.replaceChild(container, parent);
+            } else {
+              // 否则只替换视频元素
+              video.parentNode?.replaceChild(container, video);
+            }
+          } else {
+            // 直接替换视频元素
+            video.parentNode?.replaceChild(container, video);
+          }
+          return true;
+        },
+        {
+          qrCodeDataURL,
+          descriptionText,
+          videoUrl: url,
+          isInMcImgRowContainer: isInMcImgRow,
+        }
+      );
+      
+      if (replaced) {
+        successCount++;
+      } else {
+        failCount++;
+        console.warn(`视频替换失败，URL: ${url}`);
+      }
+    } catch (error) {
+      failCount++;
+      console.warn(`视频转二维码失败: ${url}`, error);
+    }
+  }
+  
+  console.log(`二维码转换完成：成功 ${successCount} 个，失败 ${failCount} 个`);
+  
+  // 最后再次检查并移除所有残留的video标签
+  await page.evaluate(() => {
+    const remainingVideos = Array.from(document.querySelectorAll("video"));
+    remainingVideos.forEach((video) => {
+      const parent = video.parentNode;
+      if (parent && parent.classList && parent.classList.contains("mc-img-row")) {
+        if (parent.children.length === 1 && parent.children[0] === video) {
+          parent.remove();
+        } else {
+          video.remove();
+        }
+      } else {
+        video.remove();
+      }
+    });
+    if (remainingVideos.length > 0) {
+      console.log(`清理了 ${remainingVideos.length} 个残留的视频元素`);
+    }
+  });
+}
+
+async function renderSinglePageToPdf(url, outFile, { backgroundTemplatePath, lang = "cn" }) {
   fs.mkdirSync(path.dirname(outFile), { recursive: true });
 
   if (!fs.existsSync(backgroundTemplatePath)) {
@@ -346,8 +601,8 @@ async function renderSinglePageToPdf(url, outFile, { backgroundTemplatePath }) {
   }
 
   const context = await browser.newContext({
-    viewport: { width: 1280, height: 720 },
-    deviceScaleFactor: 1,
+    viewport: { width: 1920, height: 1080 },
+    deviceScaleFactor: 2, // 提高DPI以改善图片清晰度
   });
 
   const merged = await PDFDocument.create();
@@ -359,10 +614,20 @@ async function renderSinglePageToPdf(url, outFile, { backgroundTemplatePath }) {
   const backgroundTemplate = await merged.embedPage(backgroundPage);
 
   const page = await context.newPage();
-  await page.goto(url, { waitUntil: "networkidle" });
-  // VitePress 在水合期间可能会让 #app 处于隐藏状态，这里只要“已挂载”即可
-  await page.waitForSelector("#app", { state: "attached", timeout: 60_000 });
-  await page.waitForSelector(".vp-doc", { state: "visible", timeout: 60_000 });
+  await page.goto(url, { waitUntil: "networkidle", timeout: 180_000 });
+  // VitePress 在水合期间可能会让 #app 处于隐藏状态，这里只要"已挂载"即可
+  await page.waitForSelector("#app", { state: "attached", timeout: 180_000 });
+  // 尝试等待文档可见，如果超时则继续
+  try {
+    await page.waitForSelector(".vp-doc", { state: "visible", timeout: 180_000 });
+  } catch (e) {
+    console.warn("等待 .vp-doc 超时，继续处理...");
+    // 等待一段时间让页面加载
+    await page.waitForTimeout(5000);
+  }
+
+  // 转换视频标签为二维码（移除视频播放器，保留二维码）
+  await convertVideosToQRCode(page, lang);
 
   await ensureImagesLoaded(page);
 
@@ -375,7 +640,41 @@ async function renderSinglePageToPdf(url, outFile, { backgroundTemplatePath }) {
       await document.fonts.ready;
     }
   });
-  await page.waitForTimeout(200);
+  
+  // 额外等待确保所有图片完全渲染
+  await page.waitForTimeout(500);
+  
+  // 验证所有图片都已正确加载
+  const imageStatus = await page.evaluate(() => {
+    const imgs = Array.from(document.querySelectorAll("img"));
+    const status = {
+      total: imgs.length,
+      loaded: 0,
+      failed: 0,
+      incomplete: []
+    };
+    imgs.forEach((img, idx) => {
+      if (img.complete && img.naturalWidth > 0 && img.naturalHeight > 0) {
+        status.loaded++;
+      } else {
+        status.failed++;
+        status.incomplete.push({
+          index: idx,
+          src: img.src.substring(0, 100),
+          naturalWidth: img.naturalWidth,
+          naturalHeight: img.naturalHeight
+        });
+      }
+    });
+    return status;
+  });
+  
+  if (imageStatus.failed > 0) {
+    console.warn(`警告: ${imageStatus.failed} 张图片可能未完全加载:`, imageStatus.incomplete);
+  } else {
+    console.log(`所有 ${imageStatus.loaded} 张图片已成功加载`);
+  }
+  
   await page.emulateMedia({ media: "screen" });
 
   await page.addStyleTag({ content: EXPORT_ONLY_DOC_CSS });
@@ -384,12 +683,15 @@ async function renderSinglePageToPdf(url, outFile, { backgroundTemplatePath }) {
   const pdfBytes = await page.pdf({
     format: "A4",
     printBackground: true,
+    preferCSSPageSize: false, // 使用format而不是CSS页面大小
     margin: {
       top: `${PDF_CONTENT_TOP_MM}mm`,
       bottom: `${PDF_CONTENT_BOTTOM_MM}mm`,
       left: "12mm",
       right: "12mm",
     },
+    // 提高PDF质量设置
+    scale: 1.0, // 保持原始比例
   });
 
   const doc = await PDFDocument.load(pdfBytes);
@@ -457,13 +759,12 @@ async function main() {
       startedByUs = true;
       await waitForServer(healthUrl);
     }
+    // 3) Export CN and EN folding-bracket-installation pages
+    const urlZh = `${BASE_URL}/cn/manuals/folding-bracket-installation.html`;
+    const urlEn = `${BASE_URL}/manuals/folding-bracket-installation.html`;
 
-    // 3) 导出：只导出 normal-user 这一页（中英各一份）
-    const urlZh = `${BASE_URL}/cn/manuals/normal-user.html`;
-    const urlEn = `${BASE_URL}/manuals/normal-user.html`;
-
-    await renderSinglePageToPdf(urlZh, OUT_ZH, { backgroundTemplatePath: HEADER_FOOTER_PDF });
-    await renderSinglePageToPdf(urlEn, OUT_EN, { backgroundTemplatePath: HEADER_FOOTER_PDF });
+    await renderSinglePageToPdf(urlZh, OUT_ZH, { backgroundTemplatePath: HEADER_FOOTER_PDF_CN, lang: "cn" });
+    await renderSinglePageToPdf(urlEn, OUT_EN, { backgroundTemplatePath: HEADER_FOOTER_PDF_EN, lang: "en" });
   } finally {
     if (startedByUs && server) server.kill();
   }

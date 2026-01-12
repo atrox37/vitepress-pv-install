@@ -11,7 +11,7 @@ import QRCode from "qrcode";
 
 // 加载videos.json以建立视频URL到视频ID的映射
 function loadVideosData() {
-  const videosJsonPath = path.join(repoRoot, "docs", "video-library", "data", "videos.json");
+  const videosJsonPath = path.join(repoRoot, "docs", "public", "video-library", "data", "videos.json");
   if (!fs.existsSync(videosJsonPath)) {
     console.warn("未找到videos.json文件，将使用视频URL作为二维码链接");
     return null;

@@ -22,27 +22,12 @@ const allVideos = computed(() => {
   const currentStep = videosData.value.steps.find((step: any) => step.id === currentStepId.value)
   if (!currentStep) return []
   
-  const videos: any[] = []
-  
-  // Check if step has sub-steps
+  // Main step only contains tab description info, videos are in subSteps
   if (currentStep.subSteps && currentStep.subSteps.length > 0) {
-    // If there are sub-steps, check if main step video URL matches any sub-step
-    const mainStepVideoUrl = currentStep.videoUrl
-    const hasDuplicateUrl = currentStep.subSteps.some((subStep: any) => subStep.videoUrl === mainStepVideoUrl)
-    
-    // Only add main step video if it doesn't duplicate a sub-step video
-    // AND if the main step has a different video URL (not empty)
-    if (!hasDuplicateUrl && mainStepVideoUrl) {
-      videos.push(currentStep)
-    }
-    // Add all sub-step videos
-    videos.push(...currentStep.subSteps)
-  } else {
-    // No sub-steps, only add main step video
-    videos.push(currentStep)
+    return currentStep.subSteps
   }
   
-  return videos
+  return []
 })
 
 // Get main steps for the step tabs
@@ -131,60 +116,39 @@ const loadVideosData = async () => {
             }
           }
         } else {
-          // If video not found, use first available video
-          if (data.steps && data.steps.length > 0) {
-            const firstStep = data.steps[0]
-            currentStepId.value = firstStep.id
-            // If step has sub-steps, prefer first sub-step; otherwise use main step
-            if (firstStep.subSteps && firstStep.subSteps.length > 0) {
-              const mainStepVideoUrl = firstStep.videoUrl
-              const hasDuplicateUrl = firstStep.subSteps.some((subStep: any) => subStep.videoUrl === mainStepVideoUrl)
-              if (!hasDuplicateUrl && mainStepVideoUrl) {
-                currentVideo.value = firstStep
-              } else {
-                currentVideo.value = firstStep.subSteps[0]
-              }
-            } else {
-              currentVideo.value = firstStep
+          // If video not found, default to step-1-1
+          const defaultVideo = findVideoById('step-1-1')
+          if (defaultVideo) {
+            currentVideo.value = defaultVideo
+            currentStepId.value = 'step-1'
+            // Redirect to default video URL
+            if (inBrowser) {
+              const url = new URL(window.location.href)
+              url.searchParams.set('video', 'step-1-1')
+              window.history.replaceState({}, '', url.toString())
             }
           }
         }
       } else {
-        // No video parameter, use first available video
-        if (data.steps && data.steps.length > 0) {
-          const firstStep = data.steps[0]
-          currentStepId.value = firstStep.id
-          // If step has sub-steps, prefer first sub-step; otherwise use main step
-          if (firstStep.subSteps && firstStep.subSteps.length > 0) {
-            const mainStepVideoUrl = firstStep.videoUrl
-            const hasDuplicateUrl = firstStep.subSteps.some((subStep: any) => subStep.videoUrl === mainStepVideoUrl)
-            if (!hasDuplicateUrl && mainStepVideoUrl) {
-              currentVideo.value = firstStep
-            } else {
-              currentVideo.value = firstStep.subSteps[0]
-            }
-          } else {
-            currentVideo.value = firstStep
+        // No video parameter, default to step-1-1
+        const defaultVideo = findVideoById('step-1-1')
+        if (defaultVideo) {
+          currentVideo.value = defaultVideo
+          currentStepId.value = 'step-1'
+          // Redirect to default video URL
+          if (inBrowser) {
+            const url = new URL(window.location.href)
+            url.searchParams.set('video', 'step-1-1')
+            window.history.replaceState({}, '', url.toString())
           }
         }
       }
     } else {
-      // SSR: use first available video
-      if (data.steps && data.steps.length > 0) {
-        const firstStep = data.steps[0]
-        currentStepId.value = firstStep.id
-        // If step has sub-steps, prefer first sub-step; otherwise use main step
-        if (firstStep.subSteps && firstStep.subSteps.length > 0) {
-          const mainStepVideoUrl = firstStep.videoUrl
-          const hasDuplicateUrl = firstStep.subSteps.some((subStep: any) => subStep.videoUrl === mainStepVideoUrl)
-          if (!hasDuplicateUrl && mainStepVideoUrl) {
-            currentVideo.value = firstStep
-          } else {
-            currentVideo.value = firstStep.subSteps[0]
-          }
-        } else {
-          currentVideo.value = firstStep
-        }
+      // SSR: default to step-1-1
+      const defaultVideo = findVideoById('step-1-1')
+      if (defaultVideo) {
+        currentVideo.value = defaultVideo
+        currentStepId.value = 'step-1'
       }
     }
   } catch (error) {

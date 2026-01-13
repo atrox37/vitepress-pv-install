@@ -10,13 +10,6 @@
         "en": "Assemble the fixed frame components including the top and side frames, ensuring proper alignment and secure fastening.",
         "zh": "组装固定框架组件，包括上边和侧边框架，确保正确对齐和牢固固定。"
       },
-      "videoUrl": "https://voltage-mgs.s3.us-east-1.amazonaws.com/pv-install-video/%E5%9B%BA%E5%AE%9A%E7%AB%AF%E6%A1%86%E6%9E%B6%E5%AE%89%E8%A3%85.mp4",
-      "thumbnail": "",
-      "duration": "",
-      "views": 0,
-      "downloads": 0,
-      "updated": "2026-01-09",
-      "manualLink": "/cn/manuals/step1-fixed-frame.html",
       "subSteps": [
         {
           "id": "step-1-1",
@@ -48,13 +41,6 @@
         "en": "Assemble the combined frame with short column welding components, ensuring proper alignment and secure connection.",
         "zh": "组装组合框架与短立柱焊接件，确保正确对齐和牢固连接。"
       },
-      "videoUrl": "https://voltage-mgs.s3.us-east-1.amazonaws.com/pv-install-video/%E5%AF%BC%E8%BD%A8%E4%B8%8E%E7%AB%8B%E6%9F%B1%E5%AE%89%E8%A3%85.mp4",
-      "thumbnail": "",
-      "duration": "",
-      "views": 0,
-      "downloads": 0,
-      "updated": "2026-01-09",
-      "manualLink": "/cn/manuals/step2-combined-frame.html",
       "subSteps": [
         {
           "id": "step-2-1",
@@ -84,7 +70,7 @@
             "en": "Preset the column adjustment tube height to 100mm for proper installation.",
             "zh": "将立柱调节管高度预设为100mm，确保正确安装。"
           },
-          "videoUrl": "https://voltage-mgs.s3.us-east-1.amazonaws.com/pv-install-video/%E7%AB%8B%E6%9F%B1%E8%B0%83%E8%8A%82%E7%AE%A1%E9%AB%98%E5%BA%A6%E9%A2%84%E8%AE%BE%EF%BC%88100mm%EF%BC%89.mp4",
+          "videoUrl": "https://voltage-mgs.s3.us-east-1.amazonaws.com/pv-install-video/%E7%AB%8B%E6%9F%B1%E8%B0%83%E8%8A%82%E7%AE%A1%E9%AB%98%E5%BA%A6%E9%A2%84%E8%AE%BE%EF%BC%88100mm%29.mp4",
           "thumbnail": "",
           "duration": "",
           "views": 0,
@@ -104,13 +90,6 @@
         "en": "Connect the fixed frame with combined frames, ensuring proper rail alignment and secure connections using rail connectors.",
         "zh": "连接固定框架与组合框架，确保导轨正确对齐，使用导轨连接件牢固连接。"
       },
-      "videoUrl": "https://voltage-mgs.s3.us-east-1.amazonaws.com/pv-install-video/%E7%BB%84%E5%90%88%E6%A1%86%E6%9E%B6%EF%BC%88%E5%AF%BC%E8%BD%A8%EF%BC%89%E4%B8%8E%E5%9B%BA%E5%AE%9A%E6%A1%86%E6%9E%B6.mp4",
-      "thumbnail": "",
-      "duration": "",
-      "views": 0,
-      "downloads": 0,
-      "updated": "2026-01-09",
-      "manualLink": "/cn/manuals/step3-assembly.html",
       "subSteps": [
         {
           "id": "step-3-1",
@@ -250,13 +229,6 @@
         "en": "Install component beam frames and connect various rod assemblies (lower rod A/B/C and upper rod) to form the complete frame structure.",
         "zh": "安装组件梁框架，连接各轴杆组合（下轴杆A/B/C和上轴杆），形成完整的框架结构。"
       },
-      "videoUrl": "https://voltage-mgs.s3.us-east-1.amazonaws.com/pv-install-video/%E7%BB%84%E4%BB%B6%E6%A2%81%E6%A1%86%E6%9E%B6%E5%AE%89%E8%A3%85.mp4",
-      "thumbnail": "",
-      "duration": "",
-      "views": 0,
-      "downloads": 0,
-      "updated": "2026-01-09",
-      "manualLink": "/cn/manuals/step4-rod-assembly.html",
       "subSteps": [
         {
           "id": "step-4-1",
@@ -396,13 +368,6 @@
         "en": "Install PV modules on the component beam frames, including wiring preparation and module mounting.",
         "zh": "在组件梁框架上安装光伏组件，包括接线准备和组件安装。"
       },
-      "videoUrl": "https://voltage-mgs.s3.us-east-1.amazonaws.com/pv-install-video/%E5%85%89%E4%BC%8F%E7%BB%84%E4%BB%B6%E5%AE%89%E8%A3%85.mp4",
-      "thumbnail": "",
-      "duration": "",
-      "views": 0,
-      "downloads": 0,
-      "updated": "2026-01-09",
-      "manualLink": "/cn/manuals/step5-pv-modules.html",
       "subSteps": [
         {
           "id": "step-5-1",
@@ -506,13 +471,6 @@
         "en": "Complete the series wiring connection for multiple PV modules, ensuring safe and reliable electrical connections.",
         "zh": "完成多块光伏组件的串联接线连接，确保电气连接安全可靠。"
       },
-      "videoUrl": "https://voltage-mgs.s3.us-east-1.amazonaws.com/pv-install-video/%E6%AD%A3%E8%B4%9F%E6%9E%81%E6%8E%A5%E7%BA%BF.mp4",
-      "thumbnail": "",
-      "duration": "",
-      "views": 0,
-      "downloads": 0,
-      "updated": "2026-01-09",
-      "manualLink": "/cn/manuals/step6-wiring.html",
       "subSteps": [
         {
           "id": "step-6-1",
@@ -544,13 +502,6 @@
         "en": "Fold the component support structure and pack it for transportation, including disassembly of fixed and combined frames.",
         "zh": "折叠组件支架结构并打包运输，包括拆分固定框架和组合框架。"
       },
-      "videoUrl": "https://voltage-mgs.s3.us-east-1.amazonaws.com/pv-install-video/%E7%BB%84%E4%BB%B6%E6%89%93%E5%8C%85.mp4",
-      "thumbnail": "",
-      "duration": "",
-      "views": 0,
-      "downloads": 0,
-      "updated": "2026-01-09",
-      "manualLink": "/cn/manuals/step7-folding.html",
       "subSteps": [
         {
           "id": "step-7-1",

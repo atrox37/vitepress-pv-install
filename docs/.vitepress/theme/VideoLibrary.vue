@@ -55,33 +55,9 @@ const currentVideoId = computed(() => {
 })
 
 const selectStep = (step: any) => {
-  // Select the step's first available video
+  // Only update the current step ID when switching tabs
+  // Do NOT change the current video or URL - only clicking a specific video should do that
   currentStepId.value = step.id
-  
-  // If step has sub-steps, prefer the first sub-step
-  // Otherwise use the main step video
-  if (step.subSteps && step.subSteps.length > 0) {
-    // Check if main step video URL matches any sub-step
-    const mainStepVideoUrl = step.videoUrl
-    const hasDuplicateUrl = step.subSteps.some((subStep: any) => subStep.videoUrl === mainStepVideoUrl)
-    
-    // If main step video doesn't duplicate, use it; otherwise use first sub-step
-    if (!hasDuplicateUrl && mainStepVideoUrl) {
-      currentVideo.value = step
-    } else {
-      currentVideo.value = step.subSteps[0]
-    }
-  } else {
-    currentVideo.value = step
-  }
-  
-  // Update URL with video ID
-  if (inBrowser) {
-    const url = new URL(window.location.href)
-    url.searchParams.set('video', currentVideo.value.id)
-    window.history.pushState({}, '', url.toString())
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
 }
 
 const selectVideo = (video: any) => {

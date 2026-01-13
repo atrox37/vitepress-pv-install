@@ -25,22 +25,22 @@ function loadVideosData() {
   }
 }
 
-// 根据视频URL查找对应的视频ID
+// 根据视频URL查找对应的视频ID（优先从subSteps中查找）
 function findVideoIdByUrl(videosData, videoUrl) {
   if (!videosData || !videosData.steps) return null;
   
   for (const step of videosData.steps) {
-    // 检查主步骤视频
-    if (step.videoUrl === videoUrl) {
-      return step.id;
-    }
-    // 检查子步骤视频
+    // 优先检查子步骤视频（subSteps中的视频信息）
     if (step.subSteps) {
       for (const subStep of step.subSteps) {
         if (subStep.videoUrl === videoUrl) {
           return subStep.id;
         }
       }
+    }
+    // 如果子步骤中没有找到，再检查主步骤视频
+    if (step.videoUrl === videoUrl) {
+      return step.id;
     }
   }
   return null;
@@ -477,14 +477,7 @@ function findVideoInfoByUrl(videosData, videoUrl) {
   if (!videosData || !videosData.steps) return null;
   
   for (const step of videosData.steps) {
-    // 检查主步骤视频
-    if (step.videoUrl === videoUrl) {
-      return {
-        id: step.id,
-        title: step.title
-      };
-    }
-    // 检查子步骤视频
+    // 优先检查子步骤视频（subSteps中的视频信息）
     if (step.subSteps) {
       for (const subStep of step.subSteps) {
         if (subStep.videoUrl === videoUrl) {
@@ -494,6 +487,13 @@ function findVideoInfoByUrl(videosData, videoUrl) {
           };
         }
       }
+    }
+    // 如果子步骤中没有找到，再检查主步骤视频
+    if (step.videoUrl === videoUrl) {
+      return {
+        id: step.id,
+        title: step.title
+      };
     }
   }
   return null;
@@ -539,7 +539,7 @@ async function convertVideosToQRCode(page, lang = "cn") {
   for (let i = videoData.length - 1; i >= 0; i--) {
     const { index, url, isInMcImgRow } = videoData[i];
     try {
-      // 查找视频ID和标题信息
+      // 查找视频ID和标题信息（优先从subSteps中查找）
       const videoInfo = findVideoInfoByUrl(videosData, url);
       const videoId = videoInfo ? videoInfo.id : findVideoIdByUrl(videosData, url);
       
@@ -547,7 +547,7 @@ async function convertVideosToQRCode(page, lang = "cn") {
       const basePath = lang === "cn" ? "/cn/video-library/" : "/video-library/";
       let qrCodeUrl;
       if (videoId) {
-        // 如果找到视频ID，构建视频库页面URL
+        // 如果找到视频ID，构建视频库页面URL，使用视频的id作为参数
         qrCodeUrl = `${QR_CODE_DOMAIN}${basePath}?video=${videoId}`;
       } else {
         // 如果找不到ID，使用原始视频URL作为后备（已经是完整URL）

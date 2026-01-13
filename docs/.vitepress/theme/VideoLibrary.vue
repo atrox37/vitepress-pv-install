@@ -118,7 +118,7 @@ const loadVideosData = async () => {
         const video = findVideoById(videoId)
         if (video) {
           currentVideo.value = video
-          // Set current step ID
+          // Set current step ID based on video
           if (video.id.startsWith('step-') && !video.id.includes('-')) {
             currentStepId.value = video.id
           } else {
@@ -203,6 +203,18 @@ if (inBrowser) {
       const video = findVideoById(videoId)
       if (video) {
         currentVideo.value = video
+        // Update step ID based on video
+        if (video.id.startsWith('step-') && !video.id.includes('-')) {
+          currentStepId.value = video.id
+        } else {
+          // Find parent step
+          for (const step of videosData.value.steps) {
+            if (step.id === video.id || (step.subSteps && step.subSteps.some((s: any) => s.id === video.id))) {
+              currentStepId.value = step.id
+              break
+            }
+          }
+        }
       }
     }
   })
